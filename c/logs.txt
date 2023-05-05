@@ -1,0 +1,9 @@
+
+-+- Nueva ejecucion del programa -+-
+OK: Tabla de ADMINS creada correctamente.
+OK: Tabla de HOTELES creada correctamente.
+OK: Tabla de HABITACIONES_HOTELES creada correctamente.
+OK: Tabla de TIPO_HABITACIONES creada correctamente.
+OK: Tabla de EMPLEADOS creada correctamente.
+OK: Tabla de CLIENTES creada correctamente.
+OK: Tabla de RESERVAS creada correctamente.
