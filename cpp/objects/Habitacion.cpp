@@ -1,17 +1,17 @@
-/*
- * Habitacion.cpp
- *
- *  Created on: 5 may 2023
- *      Author: inigo
- */
 
 #include "Habitacion.h"
+#include "stdio.h"
 
 Habitacion::Habitacion() {
 	num_habitacion = 0;
-	TipoHab t = TipoHab();
-	tipoHab = t;
+	tipoHab = NULL;
 	ocupantes = 0;
+}
+
+Habitacion::Habitacion(int num_habitacion, TipoHab* tipoHab, int ocupantes) {
+	this->num_habitacion = num_habitacion;
+	this->tipoHab = tipoHab;
+	this->ocupantes = ocupantes;
 }
 
 Habitacion::~Habitacion() {
@@ -31,7 +31,7 @@ int Habitacion::getNumHabitacion()
 	return this->num_habitacion;
 }
 
-TipoHab Habitacion::getTipoHab()
+TipoHab* Habitacion::getTipoHab()
 {
 	return this->tipoHab;
 }

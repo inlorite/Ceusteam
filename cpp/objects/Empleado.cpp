@@ -1,9 +1,3 @@
-/*
- * Empleado.cpp
- *
- *  Created on: 5 may 2023
- *      Author: inigo
- */
 
 #include "Empleado.h"
 #include "stdio.h"
@@ -15,8 +9,15 @@ Empleado::Empleado() {
 	hotel = NULL;
 }
 
+Empleado::Empleado(int id, char* nombre, Hotel* hotel) {
+	this->id = 0;
+	this->nombre = new char[strlen(nombre)+1];
+	strcpy(this->nombre, nombre);
+	this->hotel = hotel;
+}
+
 Empleado::~Empleado() {
-	// TODO Auto-generated destructor stub
+
 }
 
 Empleado::Empleado(const Empleado &other) {

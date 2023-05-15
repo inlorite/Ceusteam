@@ -1,9 +1,3 @@
-/*
- * Cliente.cpp
- *
- *  Created on: 5 may 2023
- *      Author: inigo
- */
 
 #include "Cliente.h"
 #include "string.h"
@@ -14,6 +8,17 @@ Cliente::Cliente() {
 	email = new char[10];
 	numTelf = 0;
 	contrasena = new char[10];
+}
+
+Cliente::Cliente(int id, char* nombre, char* email, int numTelf, char* contrasena) {
+	this->id = id;
+	this->nombre = new char[strlen(nombre)+1];
+	strcpy(this->nombre, nombre);
+	this->email = new char[strlen(email)+1];
+	strcpy(this->email, email);
+	this->numTelf = 0;
+	this->contrasena = new char[strlen(contrasena)+1];
+	strcpy(this->contrasena, contrasena);
 }
 
 Cliente::~Cliente() {

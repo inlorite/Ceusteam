@@ -1,6 +1,7 @@
 
 
 #include "Hotel.h"
+#include "string.h"
 
 Hotel::Hotel() {
 	id = 0;
@@ -9,6 +10,21 @@ Hotel::Hotel() {
 	numHabTotales = 10;
 	numHabActuales = 10;
 	habitaciones = new Habitacion[10];
+}
+
+Hotel::Hotel(int id, char* nombre, char* localizacion, int numHabTotales, int numHabActuales, Habitacion* habitaciones) {
+	this->id = id;
+	this->nombre = new char[strlen(nombre)+1];
+	strcpy(this->nombre, nombre);
+	this->localizacion = new char[strlen(localizacion)+1];
+	strcpy(this->localizacion, localizacion);
+	this->numHabTotales = numHabTotales;
+	this->numHabActuales = numHabActuales;
+
+	this->habitaciones = new Habitacion[numHabTotales];
+	for (int i = 0; i < numHabTotales; ++i) {
+		this->habitaciones[i] = habitaciones[i];
+	}
 }
 
 Hotel::~Hotel() {

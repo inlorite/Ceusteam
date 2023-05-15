@@ -1,9 +1,3 @@
-/*
- * Reserva.h
- *
- *  Created on: 5 may 2023
- *      Author: inigo
- */
 
 #ifndef OBJECTS_RESERVA_H_
 #define OBJECTS_RESERVA_H_
@@ -19,6 +13,7 @@ class Reserva {
 
 	public:
 		Reserva();
+		Reserva(Cliente* cliente, Hotel* hotel, int numHabitacion);
 		virtual ~Reserva();
 		Reserva(const Reserva &other);
 

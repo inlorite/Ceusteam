@@ -15,6 +15,7 @@ class Hotel {
 
 	public:
 		Hotel();
+		Hotel(int id, char* nombre, char* localizacion, int numHabTotales, int numHabActuales, Habitacion* habitaciones);
 		virtual ~Hotel();
 		Hotel(const Hotel &other);
 

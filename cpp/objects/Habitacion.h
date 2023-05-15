@@ -7,16 +7,17 @@
 class Habitacion {
 	private:
 		int num_habitacion;
-	    TipoHab tipoHab;
+	    TipoHab* tipoHab;
 	    int ocupantes;
 
 	public:
 		Habitacion();
+		Habitacion(int num_habitacion, TipoHab* tipoHab, int ocupantes);
 		virtual ~Habitacion();
 		Habitacion(const Habitacion &other);
 
 		int getNumHabitacion();
-		TipoHab getTipoHab();
+		TipoHab* getTipoHab();
 		int getOcupantes();
 };
 
