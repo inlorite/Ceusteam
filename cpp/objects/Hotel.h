@@ -1,18 +1,29 @@
-/*
- * Hotel.h
- *
- *  Created on: 5 may 2023
- *      Author: inigo
- */
 
 #ifndef OBJECTS_HOTEL_H_
 #define OBJECTS_HOTEL_H_
 
+#include "Habitacion.h"
+
 class Hotel {
-public:
-	Hotel();
-	virtual ~Hotel();
-	Hotel(const Hotel &other);
+	private:
+		int id;
+		char* nombre;
+		char* localizacion;
+		int numHabTotales;
+		int numHabActuales;
+		Habitacion* habitaciones;
+
+	public:
+		Hotel();
+		virtual ~Hotel();
+		Hotel(const Hotel &other);
+
+		int getId();
+		char* getNombre();
+		char* getLocalizacion();
+		int getNumHabTotales();
+		int getNumHabActuales();
+		Habitacion* getHabitaciones();
 };
 
 #endif /* OBJECTS_HOTEL_H_ */

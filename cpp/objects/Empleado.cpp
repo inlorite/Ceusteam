@@ -6,10 +6,13 @@
  */
 
 #include "Empleado.h"
+#include "stdio.h"
+#include "string.h"
 
 Empleado::Empleado() {
-	// TODO Auto-generated constructor stub
-
+	id = 0;
+	nombre = new char[10];
+	hotel = NULL;
 }
 
 Empleado::~Empleado() {
@@ -17,7 +20,25 @@ Empleado::~Empleado() {
 }
 
 Empleado::Empleado(const Empleado &other) {
-	// TODO Auto-generated constructor stub
-
+	id = other.id;
+	nombre = new char[strlen(other.nombre)+1];
+	strcpy(nombre, other.nombre);
+	hotel = other.hotel;
 }
 
+/////////////////// GETTERS ///////////////////////
+
+int Empleado::getId()
+{
+	return this->id;
+}
+
+char* Empleado::getNombre()
+{
+	return this->nombre;
+}
+
+Hotel* Empleado::getHotel()
+{
+	return this->hotel;
+}

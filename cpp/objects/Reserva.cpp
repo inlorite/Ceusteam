@@ -6,18 +6,37 @@
  */
 
 #include "Reserva.h"
+#include "stdio.h"
 
 Reserva::Reserva() {
-	// TODO Auto-generated constructor stub
-
+	cliente = NULL;
+	hotel = NULL;
+	numHabitacion = 0;
 }
 
 Reserva::~Reserva() {
-	// TODO Auto-generated destructor stub
+
 }
 
 Reserva::Reserva(const Reserva &other) {
-	// TODO Auto-generated constructor stub
-
+	cliente = other.cliente;
+	hotel = other.hotel;
+	numHabitacion = other.numHabitacion;
 }
 
+/////////////////// GETTERS ///////////////////////
+
+Cliente* Reserva::getCliente()
+{
+	return this->cliente;
+}
+
+Hotel* Reserva::getHotel()
+{
+	return this->hotel;
+}
+
+int Reserva::getNumHabitacion()
+{
+	return this->numHabitacion;
+}

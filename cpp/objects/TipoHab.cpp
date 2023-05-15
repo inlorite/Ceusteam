@@ -6,18 +6,38 @@
  */
 
 #include "TipoHab.h"
+#include "string.h"
 
 TipoHab::TipoHab() {
-	// TODO Auto-generated constructor stub
-
+	id = 0;
+	tipo = new char[10];
+	precio = 0;
 }
 
 TipoHab::~TipoHab() {
-	// TODO Auto-generated destructor stub
+	delete [] tipo;
 }
 
 TipoHab::TipoHab(const TipoHab &other) {
-	// TODO Auto-generated constructor stub
-
+	id = other.id;
+	tipo = new char[strlen(other.tipo)+1];
+	strcpy(tipo, other.tipo);
+	precio = other.precio;
 }
 
+/////////////////// GETTERS ///////////////////////
+
+int TipoHab::getId()
+{
+	return this->id;
+}
+
+char* TipoHab::getTipo()
+{
+	return this->tipo;
+}
+
+float TipoHab::getPrecio()
+{
+	return this->precio;
+}

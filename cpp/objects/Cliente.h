@@ -9,10 +9,23 @@
 #define OBJECTS_CLIENTE_H_
 
 class Cliente {
-public:
-	Cliente();
-	virtual ~Cliente();
-	Cliente(const Cliente &other);
+	private:
+		int id;
+		char* nombre;
+		char* email;
+		int numTelf;
+		char* contrasena;
+
+	public:
+		Cliente();
+		virtual ~Cliente();
+		Cliente(const Cliente &other);
+
+		int getId();
+		char* getNombre();
+		char* getEmail();
+		int getTelf();
+		char* getContrasena();
 };
 
 #endif /* OBJECTS_CLIENTE_H_ */

@@ -9,10 +9,19 @@
 #define OBJECTS_TIPOHAB_H_
 
 class TipoHab {
-public:
-	TipoHab();
-	virtual ~TipoHab();
-	TipoHab(const TipoHab &other);
+	private:
+		int id;
+		char* tipo;
+		float precio;
+
+	public:
+		TipoHab();
+		virtual ~TipoHab();
+		TipoHab(const TipoHab &other);
+
+		int getId();
+		char* getTipo();
+		float getPrecio();
 };
 
 #endif /* OBJECTS_TIPOHAB_H_ */
