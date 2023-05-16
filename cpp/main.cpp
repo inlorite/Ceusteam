@@ -24,7 +24,7 @@ int main(void) {
 	int numClientes = 0;
 	int numReservas = 0;
 
-	Hotel* hotel = new Hotel[50];
+	Hotel* hoteles = new Hotel[50];
 	Cliente* clientes = new Cliente[30];
 	TipoHab *tiposHabitacion = new TipoHab[3];
 	Reserva* reservas = new Reserva[50];
@@ -67,33 +67,40 @@ int main(void) {
 				cout << "\n----------- HOTELES -----------\n" << endl;
 
 				for (int i = 0; i < numHoteles; ++i) {
-					hotel[i].imprimirHotel();
+					hoteles[i].imprimirHotel();
 				}
 
+				int hotelSeleccionado;
 				cout << "\nIntroduzca el ID del hotel que quiera ver: ";
-				scanf("%d", &opcion);
+				scanf("%d", &hotelSeleccionado);
 
-				if (opcion < numHoteles)
+				if (hotelSeleccionado < numHoteles)
 				{
-					cout << "Introduzca la operacion que quiera realizar: \n"
-							"1. Ver habitaciones.\n"
-							"2. Reservar una habitacion.\n"
-							"3. Salir.\n\n";
+					int seguir2 = 1;
 
-					scanf("%d", &opcion);
-
-					switch (opcion)
+					while (seguir2)
 					{
-						case 1:
-							// Ver habitaciones
-							break;
+						cout << "\n\nIntroduzca la operacion que quiera realizar: \n"
+								"1. Ver habitaciones.\n"
+								"2. Reservar una habitacion.\n"
+								"3. Salir.\n\n";
 
-						case 2:
-							// Reservar
-							break;
+						scanf("%d", &opcion);
 
-						case 3:
-							break;
+						switch (hotelSeleccionado)
+						{
+							case 1:
+								hoteles[hotelSeleccionado-1].visualizarHabitacionesHotel();
+								break;
+
+							case 2:
+								// Reservar
+								break;
+
+							case 3:
+								seguir2 = 0;
+								break;
+						}
 					}
 				}
 				else

@@ -19,6 +19,8 @@ class Habitacion {
 		int getNumHabitacion();
 		TipoHab* getTipoHab();
 		int getOcupantes();
+
+		void imprimirHabitacion();
 };
 
 #endif /* OBJECTS_HABITACION_H_ */

@@ -27,6 +27,7 @@ class Hotel {
 		Habitacion* getHabitaciones();
 
 		void imprimirHotel();
+		void visualizarHabitacionesHotel();
 };
 
 #endif /* OBJECTS_HOTEL_H_ */

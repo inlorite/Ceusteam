@@ -86,3 +86,10 @@ void Hotel::imprimirHotel()
 {
 	cout << "[" << this->id << " - " << this->nombre << " - " << this->localizacion << "Ocupacion: " << this->numHabActuales << "/"<< this->numHabTotales << "]" << endl;
 }
+
+void Hotel::visualizarHabitacionesHotel()
+{
+	for (int i = 0; i < this->numHabActuales; ++i) {
+		this->habitaciones[i].imprimirHabitacion();
+	}
+}

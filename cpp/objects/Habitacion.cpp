@@ -1,6 +1,8 @@
-
+#include <iostream>
 #include "Habitacion.h"
 #include "stdio.h"
+
+using namespace std;
 
 Habitacion::Habitacion() {
 	num_habitacion = 0;
@@ -39,4 +41,11 @@ TipoHab* Habitacion::getTipoHab()
 int Habitacion::getOcupantes()
 {
 	return this->ocupantes;
+}
+
+/////////////////// FUNCIONES ///////////////////////
+
+void Habitacion::imprimirHabitacion()
+{
+	cout << "[" << this->num_habitacion << " - " << this->tipoHab->getTipo() << " - " << this->ocupantes << " personas" << "]" << endl;
 }
