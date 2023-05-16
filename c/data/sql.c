@@ -339,7 +339,7 @@ void cargarDatos(sqlite3* db, sqlite3_stmt* stmt, Hotel* hoteles, int numHoteles
 
 	char cargarClientes[] = "SELECT * FROM CLIENTES";
 
-	result = sqlite3_exec(db, cargarClientes, callback, 0, &err_msg);
+	result = sqlite3_prepare_v2(db, cargarClientes, -1, &stmt, 0); // Prepara la consulta
 
 	if (result != SQLITE_OK ) {
 		fprintf(stderr, "Failed to select data\n");
@@ -349,18 +349,29 @@ void cargarDatos(sqlite3* db, sqlite3_stmt* stmt, Hotel* hoteles, int numHoteles
 		sqlite3_close(db);
 		return;
 	}
-}
 
-int callback(void *NotUsed, int argc, char **argv, char **azColName, FILE* f) {
+	    // Itera sobre las filas de resultados
+	    while ((result = sqlite3_step(stmt)) == SQLITE_ROW) {
+	        int columnCount = sqlite3_column_count(stmt);
 
-	NotUsed = 0;
+	        for (int i = 0; i < columnCount; i++) {
+	            const char* columnName = sqlite3_column_name(stmt, i);
+	            const char* columnValue = (const char*)sqlite3_column_text(stmt, i);
+	            printf("%s = %s\n", columnName, columnValue ? columnValue : "NULL");
+	        }
+	        printf("\n");
+	    }
 
-	for (int i = 0; i < argc; i++) {
-		printf("%s = %s\n", azColName[i], argv[i] ? argv[i] : "NULL");
+	    if (result != SQLITE_DONE) {
+	        fprintf(stderr, "Error al obtener resultados: %s\n", sqlite3_errmsg(db));
+	    }
+
+	    sqlite3_finalize(stmt); // Finaliza la consulta
+	    sqlite3_close(db); // Cierra la base de datos
+
+	    return;
 	}
-
-	printf("\n");
-
-	return 0;
 }
+
+
 
