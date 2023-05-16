@@ -5,10 +5,22 @@
 #include "objects/Empleado.h"
 #include "objects/Reserva.h"
 
+extern "C" {
+	#include "../c/data/sql.h"
+}
+
 using namespace std;
 
 int main(void) {
 	cout << "Programa hecho en cpp" << endl;
+
+	FILE* f;
+	sqlite3 *db;
+	sqlite3_stmt *stmt;
+
+	sqlite3_open("../hoteles.sqlite", &db);
+
+	crearTablas(db, stmt, f);
 
 	cout << "\n ======================================\n "
 			   "\t RESERVA DE HOTELES\n "
@@ -31,6 +43,10 @@ int main(void) {
 
 	char* usuario = new char[20];
 	char* contrasena = new char[20];
+
+	Cliente c(1, "test", "test@gmail.com", 111111111, "test");
+	clientes[0] = c;
+	numClientes++;
 
 	while (iniciarSesion == 0)
 	{

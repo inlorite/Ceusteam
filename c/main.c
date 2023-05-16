@@ -19,6 +19,7 @@ int main(void)
 	fprintf(f, "\n-+- Nueva ejecucion del programa -+-\n");
 	sqlite3_open("../hoteles.sqlite", &db);
 
+	borrarTablas(db, stmt, f);
 	crearTablas(db, stmt, f);
 
 	Hotel* hotel = malloc(sizeof(Hotel) * 50);
@@ -44,6 +45,10 @@ int main(void)
 	Admin a = {1, "test", "test"};
 	admins[0] = a;
 	numAdmins++;
+
+	guardarDatos(db, stmt, hotel, idHotel, tiposHabitacion, 3, empleados, numEmpleados, clientes, numClientes, reservas, numReservas, admins, numAdmins, f);
+
+	cargarDatos(db, stmt, hotel, idHotel, tiposHabitacion, 3, empleados, numEmpleados, clientes, numClientes, reservas, numReservas, f);
 
 	printf("\n ======================================\n "
 		   "\tGESTION DE HOTELES\n "
