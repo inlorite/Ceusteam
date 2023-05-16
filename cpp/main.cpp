@@ -1,4 +1,5 @@
 #include <iostream>
+#include "string.h"
 #include "objects/Hotel.h"
 #include "objects/Cliente.h"
 #include "objects/Empleado.h"
@@ -13,7 +14,9 @@ int main(void) {
 			   "\t RESERVA DE HOTELES\n "
 			   "======================================\n" << endl;
 
+
 	int seguir = 1;
+	int iniciarSesion = 0;
 
 	/* CARGA DE DATOS DESDE LA BD */
 
@@ -26,13 +29,34 @@ int main(void) {
 	TipoHab *tiposHabitacion = new TipoHab[3];
 	Reserva* reservas = new Reserva[50];
 
+	char* usuario = new char[20];
+	char* contrasena = new char[20];
+
+	while (iniciarSesion == 0)
+	{
+		cout << "Introduzca un usuario:\n";
+		scanf("%s", usuario);
+		cout << "Introduzca la contrasena:\n";
+		scanf("%s", contrasena);
+
+		for (int i = 0; i < numClientes; ++i) {
+			if (strcmp(clientes[i].getNombre(), usuario) == 0) {
+				if (strcmp(clientes[i].getContrasena(), contrasena) == 0) {
+					iniciarSesion = 1;
+					break;
+				}
+			}
+		}
+	}
+
+
 	while (seguir)
 	{
 		cout << "\n\n -------------------------------------------\n"
 				"Introduzca la operacion que quiera realizar: \n"
-				"1. Visualizacion de la informacion de los hoteles. \n"
-				"2. Reserva de habitaciones dentro de los hoteles.\n"
-				"3. Salir\n\n";
+				"1. Visualizar la informacion de los hoteles.\n"
+				"2. Ver tus reservas.\n"
+				"3. Salir.\n\n";
 
 		int opcion;
 		scanf("%d", &opcion);
@@ -45,6 +69,38 @@ int main(void) {
 				for (int i = 0; i < numHoteles; ++i) {
 					hotel[i].imprimirHotel();
 				}
+
+				cout << "\nIntroduzca el ID del hotel que quiera ver: ";
+				scanf("%d", &opcion);
+
+				if (opcion < numHoteles)
+				{
+					cout << "Introduzca la operacion que quiera realizar: \n"
+							"1. Ver habitaciones.\n"
+							"2. Reservar una habitacion.\n"
+							"3. Salir.\n\n";
+
+					scanf("%d", &opcion);
+
+					switch (opcion)
+					{
+						case 1:
+							// Ver habitaciones
+							break;
+
+						case 2:
+							// Reservar
+							break;
+
+						case 3:
+							break;
+					}
+				}
+				else
+				{
+					cout << "\nEl hotel con ID " << opcion << " no existe.";
+				}
+
 				break;
 
 			case 2:
