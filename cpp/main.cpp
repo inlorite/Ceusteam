@@ -10,16 +10,19 @@ int main(void) {
 	cout << "Programa hecho en cpp" << endl;
 
 	cout << "\n ======================================\n "
-			   "\tRESERVA DE HOTELES\n "
+			   "\t RESERVA DE HOTELES\n "
 			   "======================================\n" << endl;
 
 	int seguir = 1;
 
 	/* CARGA DE DATOS DESDE LA BD */
 
+	int numHoteles = 0;
+	int numClientes = 0;
+	int numReservas = 0;
+
 	Hotel* hotel = new Hotel[50];
 	Cliente* clientes = new Cliente[30];
-	Empleado* empleados = new Empleado[20];
 	TipoHab *tiposHabitacion = new TipoHab[3];
 	Reserva* reservas = new Reserva[50];
 
@@ -37,10 +40,16 @@ int main(void) {
 		switch (opcion)
 		{
 			case 1:
-				//
+				cout << "\n----------- HOTELES -----------\n" << endl;
+
+				for (int i = 0; i < numHoteles; ++i) {
+					hotel[i].imprimirHotel();
+				}
+				break;
 
 			case 2:
 				//
+				break;
 
 			case 3:
 				seguir = 0;

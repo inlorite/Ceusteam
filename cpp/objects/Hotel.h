@@ -25,6 +25,8 @@ class Hotel {
 		int getNumHabTotales();
 		int getNumHabActuales();
 		Habitacion* getHabitaciones();
+
+		void imprimirHotel();
 };
 
 #endif /* OBJECTS_HOTEL_H_ */

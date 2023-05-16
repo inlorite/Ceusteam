@@ -1,7 +1,9 @@
 
-
+#include <iostream>
 #include "Hotel.h"
 #include "string.h"
+
+using namespace std;
 
 Hotel::Hotel() {
 	id = 0;
@@ -76,4 +78,11 @@ int Hotel::getNumHabActuales()
 Habitacion* Hotel::getHabitaciones()
 {
 	return this->habitaciones;
+}
+
+/////////////////// FUNCIONES ///////////////////////
+
+void Hotel::imprimirHotel()
+{
+	cout << "[" << this->id << " - " << this->nombre << "Ocupacion: " << this->numHabActuales << "/"<< this->numHabTotales << "]" << endl;
 }
