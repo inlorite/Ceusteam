@@ -159,7 +159,10 @@ int main(void) {
 
 			case 2:
 				// Ver tus reservas
-
+				Hotel* h = new Hotel();
+				Reserva* pruebaReserva = new Reserva(&c,h,1);
+				reservas[numReservas]= *pruebaReserva;
+				numReservas++;
 				int verReservas =0;
 				for (int i = 0;i < numReservas; i++) {
 					if (strcmp(reservas[i].getCliente()->getNombre(), usuario) == 0) {
