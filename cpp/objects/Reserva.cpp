@@ -1,7 +1,9 @@
-
+#include <iostream>
+#include "string.h"
 #include "Reserva.h"
 #include "stdio.h"
 
+using namespace std;
 Reserva::Reserva() {
 	cliente = NULL;
 	hotel = NULL;
@@ -39,4 +41,8 @@ Hotel* Reserva::getHotel()
 int Reserva::getNumHabitacion()
 {
 	return this->numHabitacion;
+}
+
+void Reserva::imprimirReserva(){
+	cout<< "\nReserva: Hotel "<< this->getHotel()->getNombre()<<" habitacion numero "<<this->getNumHabitacion()<<" a nombre de "<<this->getCliente()->getNombre()<<endl;
 }

@@ -18,9 +18,9 @@ int main(void) {
 	sqlite3 *db;
 	sqlite3_stmt *stmt;
 
-	sqlite3_open("../hoteles.sqlite", &db);
+	//sqlite3_open("../hoteles.sqlite", &db);
 
-	crearTablas(db, stmt, f);
+	//crearTablas(db, stmt, f);
 
 	cout << "\n ======================================\n "
 			   "\t RESERVA DE HOTELES\n "
@@ -45,6 +45,7 @@ int main(void) {
 	char* contrasena = new char[20];
 
 	Cliente c(1, "test", "test@gmail.com", 111111111, "test");
+
 	clientes[0] = c;
 	numClientes++;
 
@@ -158,11 +159,22 @@ int main(void) {
 
 			case 2:
 				// Ver tus reservas
+
+				int verReservas =0;
+				for (int i = 0;i < numReservas; i++) {
+					if (strcmp(reservas[i].getCliente()->getNombre(), usuario) == 0) {
+						verReservas++;
+						reservas[i].imprimirReserva();
+					}
+				}
+				if(verReservas==0){
+					cout<<"\nNo se han encontrado reservas a su nombre\n"<<endl;
+				}
 				break;
 
-			case 3:
-				seguir = 0;
-
+			//case 3:
+			//	seguir = 0;
+			//	break;
 		}
 	}
 

@@ -20,6 +20,7 @@ class Reserva {
 		Cliente* getCliente();
 		Hotel* getHotel();
 		int getNumHabitacion();
+		void imprimirReserva();
 };
 
 #endif /* OBJECTS_RESERVA_H_ */
