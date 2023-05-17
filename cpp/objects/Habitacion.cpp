@@ -1,6 +1,7 @@
 #include <iostream>
 #include "Habitacion.h"
 #include "stdio.h"
+#include "string.h"
 
 using namespace std;
 
@@ -47,5 +48,18 @@ int Habitacion::getOcupantes()
 
 void Habitacion::imprimirHabitacion()
 {
-	cout << "[" << this->num_habitacion << " - " << this->tipoHab->getTipo() << " - " << this->ocupantes << " personas" << "]" << endl;
+	char* estado;
+	strcpy(estado, "OCUPADA");
+	if (this->estaLibre())
+		strcpy(estado, "LIBRE");
+
+	cout << "[" << this->num_habitacion << " - " << this->tipoHab->getTipo() << " - " << estado << "]" << endl;
+}
+
+int Habitacion::estaLibre()
+{
+	if (this->ocupantes)
+		return 1;
+
+	return 0;
 }

@@ -21,6 +21,7 @@ class Habitacion {
 		int getOcupantes();
 
 		void imprimirHabitacion();
+		int estaLibre();
 };
 
 #endif /* OBJECTS_HABITACION_H_ */

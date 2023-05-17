@@ -111,6 +111,29 @@ int main(void) {
 
 							case 2:
 								// Reservar
+								int habSeleccionada;
+								cout << "\nIntroduzca el número de habitacion que quiera reservar: ";
+								scanf("%d", &habSeleccionada);
+
+								if (habSeleccionada < hoteles[hotelSeleccionado-1].getNumHabTotales())
+								{
+									if (hoteles[hotelSeleccionado-1].getHabitaciones()[habSeleccionada].estaLibre())
+									{
+										cout << "\nIntroduzca el número de ocupantes (max 5): ";
+										int ocupantes;
+										scanf("%d", &ocupantes);
+
+										if (ocupantes < 6 && ocupantes > 0)
+										{
+											// Realizar reserva
+										}
+									}
+								}
+								else
+								{
+									cout << "\nLa habitacion seleccionada esta ocupada o no existe" << endl;
+								}
+
 								break;
 
 							case 3:
