@@ -19,19 +19,21 @@ int main(void)
 	fprintf(f, "\n-+- Nueva ejecucion del programa -+-\n");
 	sqlite3_open("../hoteles.sqlite", &db);
 
-	borrarTablas(db, stmt, f);
-	crearTablas(db, stmt, f);
+	//borrarTablas(db, stmt, f);
+	//crearTablas(db, stmt, f);
 
-	Hotel* hotel = malloc(sizeof(Hotel) * 50);
+	Hotel* hoteles = malloc(sizeof(Hotel) * 50);
 	Cliente* clientes = malloc(sizeof(Cliente) * 30);
 	Empleado* empleados = malloc(sizeof(Empleado) * 20);
-	TipoHab *tiposHabitacion = malloc(sizeof(TipoHab)*3);
+	TipoHab* tiposHabitacion = malloc(sizeof(TipoHab)*3);
 	Reserva* reservas = malloc(sizeof(Reserva) * 50);
 	Admin* admins = malloc(sizeof(Admin) * 10);
 
+	/*
 	tiposHabitacion[0].id=1;strcpy(tiposHabitacion[0].tipo,"Presidencial");tiposHabitacion[0].precio=300;
 	tiposHabitacion[1].id=2;strcpy(tiposHabitacion[1].tipo,"Suite");tiposHabitacion[1].precio=150;
 	tiposHabitacion[2].id=3;strcpy(tiposHabitacion[2].tipo,"Estandar");tiposHabitacion[2].precio=75;
+	 */
 
 	int idHotel = 0;
 	int numClientes = 0;
@@ -42,13 +44,44 @@ int main(void)
 	int seguir;
 	seguir = 1;
 
-	Admin a = {1, "test", "test"};
+
+	Admin a = {0, "test", "test"};
 	admins[0] = a;
 	numAdmins++;
 
-	guardarDatos(db, stmt, hotel, idHotel, tiposHabitacion, 3, empleados, numEmpleados, clientes, numClientes, reservas, numReservas, admins, numAdmins, f);
+	/*
+	Cliente c = {0, "testcliente", "testcliente@gmail.com", 123456789, "contra123"};
+	clientes[0] = c;
+	numClientes++;
 
-	cargarDatos(db, stmt, hotel, idHotel, tiposHabitacion, 3, empleados, numEmpleados, clientes, numClientes, reservas, numReservas, f);
+	Habitacion* habitaciones = malloc(sizeof(Habitacion) * 2);
+	int numHabitaciones = 0;
+
+	Habitacion hab1 = {0, tiposHabitacion[0], 15};
+	habitaciones[0] = hab1;
+	numHabitaciones++;
+	Habitacion hab2 = {1, tiposHabitacion[1], 46};
+	habitaciones[1] = hab2;
+	numHabitaciones++;
+
+	Hotel h = {0, "hotel1", "bilbao", numHabitaciones, numHabitaciones, habitaciones};
+	hoteles[0] = h;
+	idHotel++;
+
+	Empleado e = {0, "fran", &hoteles[0]};
+	empleados[0] = e;
+	numEmpleados++;
+
+	Reserva r = {&clientes[0], &hoteles[0], 1};
+	reservas[0] = r;
+	numReservas++;
+
+	guardarDatos(db, stmt, hoteles, idHotel, tiposHabitacion, 3, empleados, numEmpleados, clientes, numClientes, reservas, numReservas, admins, numAdmins, f);
+	*/
+
+	cargarDatos(db, stmt, hoteles, idHotel, tiposHabitacion, 3, clientes, numClientes, reservas, numReservas, f);
+	//cargarAdmins(db, stmt, admins, numAdmins, f);
+	//cargarEmpleados(db, stmt, empleados, numEmpleados, hoteles, f);
 
 	printf("\n ======================================\n "
 		   "\tGESTION DE HOTELES\n "
@@ -91,11 +124,11 @@ int main(void)
 			switch (opcion)
 			{
 				case 1:
-					visualizarHoteles(hotel, idHotel);
+					visualizarHoteles(hoteles, idHotel);
 					break;
 
 				case 2:
-					hotel[idHotel]=*crearHotel(idHotel);
+					hoteles[idHotel]=*crearHotel(idHotel);
 					idHotel++;
 
 					break;
@@ -106,11 +139,11 @@ int main(void)
 						printf("\nActualmente no hay ningun hotel registrado.");
 						break;
 					}
-					modificarHotel(hotel,idHotel,tiposHabitacion);
+					modificarHotel(hoteles,idHotel,tiposHabitacion);
 					break;
 
 				case 4:
-					eliminarHotel(hotel, &idHotel);
+					eliminarHotel(hoteles, &idHotel);
 					break;
 
 				case 5:
@@ -124,11 +157,11 @@ int main(void)
 					switch (opcion)
 					{
 						case 1:
-							anadirReserva(reservas, &numReservas, clientes, &numClientes, hotel, &idHotel);
+							anadirReserva(reservas, &numReservas, clientes, &numClientes, hoteles, &idHotel);
 							break;
 
 						case 2:
-							borrarReserva(reservas, &numReservas, clientes, &numClientes, hotel, &idHotel);
+							borrarReserva(reservas, &numReservas, clientes, &numClientes, hoteles, &idHotel);
 							break;
 
 						case 3:
@@ -191,11 +224,11 @@ int main(void)
 						switch (opcion)
 						{
 							case 1:
-								crearEmpleado(empleados, &numEmpleados, hotel, &idHotel);
+								crearEmpleado(empleados, &numEmpleados, hoteles, &idHotel);
 								break;
 
 							case 2:
-								modificarEmpleado(empleados, &numEmpleados, hotel, &idHotel);
+								modificarEmpleado(empleados, &numEmpleados, hoteles, &idHotel);
 								break;
 
 							case 3:
@@ -203,7 +236,7 @@ int main(void)
 								break;
 
 							case 4:
-								consultarPlantilla(empleados, &numEmpleados, hotel, &idHotel);
+								consultarPlantilla(empleados, &numEmpleados, hoteles, &idHotel);
 								break;
 
 							case 5:

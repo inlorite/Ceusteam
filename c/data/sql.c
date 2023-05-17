@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #include "sql.h"
 
 void crearTablas(sqlite3* db, sqlite3_stmt* stmt, FILE* f)
@@ -222,7 +223,7 @@ void guardarDatos(sqlite3* db, sqlite3_stmt* stmt, Hotel* hoteles, int numHotele
 	for (int i = 0; i < numHoteles; ++i) {
 		for (int j = 0; j < hoteles[i].numHabActuales; ++j) {
 			sqlite3_prepare_v2(db, insertHabitacionesHoteles, strlen(insertHabitacionesHoteles) + 1, &stmt, NULL) ;
-			//sqlite3_bind_int(stmt, 1, hoteles[i].habitaciones[j].id);
+			sqlite3_bind_int(stmt, 1, j);
 			sqlite3_bind_int(stmt, 2, hoteles[i].id);
 			sqlite3_bind_int(stmt, 3, hoteles[i].habitaciones[j].num_habitacion);
 			sqlite3_bind_int(stmt, 4, hoteles[i].habitaciones[j].ocupantes);
@@ -317,7 +318,7 @@ void guardarDatos(sqlite3* db, sqlite3_stmt* stmt, Hotel* hoteles, int numHotele
 
 	for (int i = 0; i < numReservas; ++i) {
 		sqlite3_prepare_v2(db, insertReservas, strlen(insertReservas) + 1, &stmt, NULL) ;
-		//sqlite3_bind_int(stmt, 1, reservas[i].id);
+		sqlite3_bind_int(stmt, 1, i);
 		sqlite3_bind_int(stmt, 2, reservas[i].cliente->id);
 		sqlite3_bind_int(stmt, 3, reservas[i].hotel->id);
 		sqlite3_bind_int(stmt, 4, reservas[i].hotel->habitaciones[reservas[i].numHabitacion].num_habitacion);
@@ -339,15 +340,10 @@ void cargarDatos(sqlite3* db, sqlite3_stmt* stmt, Hotel* hoteles, int numHoteles
 	int result;
 	char *err_msg = 0;
 
-	//CREATE TABLE IF NOT EXISTS CLIENTES(ID INTEGER, NOMBRE TEXT, EMAIL TEXT, NUM_TELF INTEGER, CONTRASENA TEXT);
-
-	//CREATE TABLE IF NOT EXISTS RESERVAS(ID INTEGER, ID_CLIENTE INTEGER, ID_HOTEL INTEGER, ID_HABITACION INTEGER);
-
 	// CARGAR TIPO_HABITACIONES
-
 	char cargarTipoHabitaciones[] = "SELECT * FROM TIPO_HABITACIONES";
 
-	result = sqlite3_prepare_v2(db, cargarTipoHabitaciones, -1, &stmt, 0); // Prepara la consulta
+	result = sqlite3_prepare_v2(db, cargarTipoHabitaciones, -1, &stmt, 0);
 
 	if (result != SQLITE_OK ) {
 		fprintf(stderr, "Failed to select data\n");
@@ -359,11 +355,11 @@ void cargarDatos(sqlite3* db, sqlite3_stmt* stmt, Hotel* hoteles, int numHoteles
 	int index = 0;
 	while ((result = sqlite3_step(stmt)) == SQLITE_ROW) {
 		//CREATE TABLE IF NOT EXISTS TIPO_HABITACIONES(ID INTEGER, TIPO TEXT, PRECIO REAL);
-		int id = sqlite3_column_name(stmt, 0);
-		char* tipo = sqlite3_column_name(stmt, 1);
-		float precio = sqlite3_column_name(stmt, 2);
+		int id = atoi((char*) sqlite3_column_text(stmt, 0));
+		char* tipo = (char*) sqlite3_column_text(stmt, 1);
+		//float precio = atof((char*) sqlite3_column_text(stmt, 2));
 
-		TipoHab tipoHab = {id, tipo, precio};
+		TipoHab tipoHab = {id, tipo, 0};
 		tiposHabitaciones[index] = tipoHab;
 		numTiposHabitaciones++;
 
@@ -376,11 +372,11 @@ void cargarDatos(sqlite3* db, sqlite3_stmt* stmt, Hotel* hoteles, int numHoteles
 
 	sqlite3_finalize(stmt);
 
+	/*
 	// CARGAR HOTELES
-
 	char cargarHoteles[] = "SELECT * FROM HOTELES";
 
-	result = sqlite3_prepare_v2(db, cargarHoteles, -1, &stmt, 0); // Prepara la consulta
+	result = sqlite3_prepare_v2(db, cargarHoteles, -1, &stmt, 0);
 
 	if (result != SQLITE_OK ) {
 		fprintf(stderr, "Failed to select data\n");
@@ -392,17 +388,17 @@ void cargarDatos(sqlite3* db, sqlite3_stmt* stmt, Hotel* hoteles, int numHoteles
 	index = 0;
 	while ((result = sqlite3_step(stmt)) == SQLITE_ROW) {
 		//CREATE TABLE IF NOT EXISTS HOTELES(ID INTEGER, NOMBRE TEXT, LOCALIZACION TEXT, NUM_HABITACIONES_TOTALES INTEGER, NUM_HABITACIONES_ACTUALES INTEGER);
-		int id = sqlite3_column_name(stmt, 0);
-		char* nombre = sqlite3_column_name(stmt, 1);
-		char* localizacion = sqlite3_column_name(stmt, 2);
-		int num_habitaciones_totales = sqlite3_column_name(stmt, 3);
-		int num_habitaciones_actuales = sqlite3_column_name(stmt, 4);
+		int id = atoi((char*) sqlite3_column_text(stmt, 0));
+		char* nombre = (char*) sqlite3_column_text(stmt, 1);
+		char* localizacion = (char*) sqlite3_column_text(stmt, 2);
+		int num_habitaciones_totales = atoi((char*) sqlite3_column_text(stmt, 3));
+		int num_habitaciones_actuales = atoi((char*) sqlite3_column_text(stmt, 4));
 
 		// CARGAR HABITACIONES_HOTELES
-
-		char cargarHabitacionesHoteles[] = "SELECT * FROM HABITACIONES_HOTELES";
+		char cargarHabitacionesHoteles[] = "SELECT * FROM HABITACIONES_HOTELES WHERE ID_HOTEL = ?";
 
 		int result2 = sqlite3_prepare_v2(db, cargarHabitacionesHoteles, -1, &stmt, 0);
+		sqlite3_bind_int(stmt, 1, id);
 
 		if (result2 != SQLITE_OK ) {
 			fprintf(stderr, "Failed to select data\n");
@@ -411,18 +407,19 @@ void cargarDatos(sqlite3* db, sqlite3_stmt* stmt, Hotel* hoteles, int numHoteles
 			return;
 		}
 
+		Habitacion* habitaciones = malloc(sizeof(Habitacion) * num_habitaciones_totales);
+
 		int index2 = 0;
 		while ((result2 = sqlite3_step(stmt)) == SQLITE_ROW) {
 			//CREATE TABLE IF NOT EXISTS HABITACIONES_HOTELES(ID INTEGER, ID_HOTEL INTEGER, NUM_HABITACION INTEGER, OCUPANTES INTEGER, ID_TIPO_HABITACION INTEGER);
-			int id = sqlite3_column_name(stmt, 0);
-			int id_hotel = sqlite3_column_name(stmt, 1);
-			int num_habitacion = sqlite3_column_name(stmt, 2);
-			int ocupantes = sqlite3_column_name(stmt, 3);
-			int id_tipo_habitacion = sqlite3_column_name(stmt, 4);
+			int id = atoi((char*) sqlite3_column_text(stmt, 0));
+			int id_hotel = atoi((char*) sqlite3_column_text(stmt, 1));
+			int num_habitacion = atoi((char*) sqlite3_column_text(stmt, 2));
+			int ocupantes = atoi((char*) sqlite3_column_text(stmt, 3));
+			int id_tipo_habitacion = atoi((char*) sqlite3_column_text(stmt, 4));
 
 			Habitacion habitacion = {num_habitacion, tiposHabitaciones[id_tipo_habitacion], ocupantes};
-			habitaciones[index] = tipoHab;
-			numTiposHabitaciones++;
+			habitaciones[index2] = habitacion;
 
 			index++;
 		}
@@ -433,7 +430,7 @@ void cargarDatos(sqlite3* db, sqlite3_stmt* stmt, Hotel* hoteles, int numHoteles
 
 		sqlite3_finalize(stmt);
 
-		Hotel hotel = {id, nombre, localizacion, num_habitaciones_totales, num_habitaciones_actuales};
+		Hotel hotel = {id, nombre, localizacion, num_habitaciones_totales, num_habitaciones_actuales, habitaciones};
 		hoteles[index] = hotel;
 		numHoteles++;
 
@@ -445,6 +442,74 @@ void cargarDatos(sqlite3* db, sqlite3_stmt* stmt, Hotel* hoteles, int numHoteles
 	}
 
 	sqlite3_finalize(stmt);
+
+	// CARGAR CLIENTES
+	char cargarClientes[] = "SELECT * FROM CLIENTES";
+
+	result = sqlite3_prepare_v2(db, cargarClientes, -1, &stmt, 0);
+
+	if (result != SQLITE_OK ) {
+		fprintf(stderr, "Failed to select data\n");
+		fprintf(stderr, "SQL error: %s\n", err_msg);
+
+		return;
+	}
+
+	index = 0;
+	while ((result = sqlite3_step(stmt)) == SQLITE_ROW) {
+		//CREATE TABLE IF NOT EXISTS CLIENTES(ID INTEGER, NOMBRE TEXT, EMAIL TEXT, NUM_TELF INTEGER, CONTRASENA TEXT);
+		int id = atoi((char*) sqlite3_column_text(stmt, 0));
+		char* nombre = (char*) sqlite3_column_text(stmt, 1);
+		char* email = (char*) sqlite3_column_text(stmt, 2);
+		int num_telf = atoi((char*) sqlite3_column_text(stmt, 3));
+		char* contrasena = (char*) sqlite3_column_text(stmt, 4);
+
+		Cliente cliente = {id, nombre, email, num_telf, contrasena};
+		clientes[index] = cliente;
+		numClientes++;
+
+		index++;
+	}
+
+	if (result != SQLITE_DONE) {
+		fprintf(stderr, "Error al obtener resultados: %s\n", sqlite3_errmsg(db));
+	}
+
+	sqlite3_finalize(stmt);
+
+	// CARGAR RESERVAS
+	char cargarReservas[] = "SELECT * FROM RESERVAS";
+
+	result = sqlite3_prepare_v2(db, cargarReservas, -1, &stmt, 0);
+
+	if (result != SQLITE_OK ) {
+		fprintf(stderr, "Failed to select data\n");
+		fprintf(stderr, "SQL error: %s\n", err_msg);
+
+		return;
+	}
+
+	index = 0;
+	while ((result = sqlite3_step(stmt)) == SQLITE_ROW) {
+		//CREATE TABLE IF NOT EXISTS RESERVAS(ID INTEGER, ID_CLIENTE INTEGER, ID_HOTEL INTEGER, ID_HABITACION INTEGER);
+		int id = atoi((char*) sqlite3_column_text(stmt, 0));
+		int id_cliente = atoi((char*) sqlite3_column_text(stmt, 1));
+		int id_hotel = atoi((char*) sqlite3_column_text(stmt, 2));
+		int id_habitacion = atoi((char*) sqlite3_column_text(stmt, 3));
+
+		Reserva reserva = {&clientes[id_cliente], &hoteles[id_hotel], id_habitacion};
+		reservas[index] = reserva;
+		numReservas++;
+
+		index++;
+	}
+
+	if (result != SQLITE_DONE) {
+		fprintf(stderr, "Error al obtener resultados: %s\n", sqlite3_errmsg(db));
+	}
+
+	sqlite3_finalize(stmt);
+	*/
 
 	return;
 }

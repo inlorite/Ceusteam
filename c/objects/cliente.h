@@ -12,7 +12,7 @@ typedef struct
 {
 	int id;
 	char nombre[20];
-	char email[20];
+	char email[50];
 	int numTelf;
 	char contrasena[20];
 } Cliente;
