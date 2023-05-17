@@ -103,7 +103,7 @@ int main(void) {
 
 						scanf("%d", &opcion);
 
-						switch (hotelSeleccionado)
+						switch (opcion)
 						{
 							case 1:
 								hoteles[hotelSeleccionado-1].visualizarHabitacionesHotel();
@@ -131,10 +131,14 @@ int main(void) {
 
 										hoteles[hotelSeleccionado-1].setNumHabActuales(hoteles[hotelSeleccionado-1].getNumHabActuales()+1);
 									}
+									else
+									{
+										cout << "\nNumero de ocupantes incorrecto." << endl;
+									}
 								}
 								else
 								{
-									cout << "\nLa habitacion seleccionada esta ocupada o no existe" << endl;
+									cout << "\nEl hotel seleccionado esta completamente ocupado" << endl;
 								}
 
 								break;
