@@ -80,6 +80,13 @@ Habitacion* Hotel::getHabitaciones()
 	return this->habitaciones;
 }
 
+/////////////////// SETTERS ///////////////////////
+
+void Hotel::setNumHabActuales(int numHabActuales)
+{
+	this->numHabActuales = numHabActuales;
+}
+
 /////////////////// FUNCIONES ///////////////////////
 
 void Hotel::imprimirHotel()

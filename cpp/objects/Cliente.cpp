@@ -61,3 +61,10 @@ char* Cliente::getContrasena()
 {
 	return this->contrasena;
 }
+
+/////////////////// FUNCIONES ///////////////////////
+
+Cliente* Cliente::encontrarCliente(Cliente* clientes, int numClientes, char* nombre)
+{
+
+}

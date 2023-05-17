@@ -111,22 +111,25 @@ int main(void) {
 
 							case 2:
 								// Reservar
-								int habSeleccionada;
-								cout << "\nIntroduzca el número de habitacion que quiera reservar: ";
-								scanf("%d", &habSeleccionada);
 
-								if (habSeleccionada < hoteles[hotelSeleccionado-1].getNumHabTotales())
+								if (hoteles[hotelSeleccionado-1].getNumHabActuales() < hoteles[hotelSeleccionado-1].getNumHabTotales())
 								{
-									if (hoteles[hotelSeleccionado-1].getHabitaciones()[habSeleccionada].estaLibre())
-									{
-										cout << "\nIntroduzca el número de ocupantes (max 5): ";
-										int ocupantes;
-										scanf("%d", &ocupantes);
+									cout << "\nIntroduzca el número de ocupantes (max 5): ";
+									int ocupantes;
+									scanf("%d", &ocupantes);
 
-										if (ocupantes < 6 && ocupantes > 0)
-										{
-											// Realizar reserva
-										}
+									if (ocupantes < 6 && ocupantes > 0)
+									{
+										// Realizar reserva
+										Reserva* nuevaReserva = new Reserva(clientes->encontrarCliente(clientes, numClientes, usuario), &hoteles[hotelSeleccionado-1], hoteles[hotelSeleccionado-1].getNumHabActuales());
+
+										reservas[numReservas] = *nuevaReserva;
+
+										numReservas++;
+
+										cout << "\nHabitacion numero" << hoteles[hotelSeleccionado-1].getNumHabActuales() << "reservada con éxito.\n" << endl;;
+
+										hoteles[hotelSeleccionado-1].setNumHabActuales(hoteles[hotelSeleccionado-1].getNumHabActuales()+1);
 									}
 								}
 								else
@@ -150,7 +153,7 @@ int main(void) {
 				break;
 
 			case 2:
-				//
+				// Ver tus reservas
 				break;
 
 			case 3:

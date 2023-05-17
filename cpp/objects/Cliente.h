@@ -21,6 +21,8 @@ class Cliente {
 		char* getEmail();
 		int getTelf();
 		char* getContrasena();
+
+		Cliente* encontrarCliente(Cliente* clientes, int numClientes, char* nombre);
 };
 
 #endif /* OBJECTS_CLIENTE_H_ */
