@@ -9,8 +9,8 @@
 typedef struct
 {
 	int id;
-	char nombre[20];
-	char contrasena[20];
+	char* nombre;
+	char* contrasena;
 } Admin;
 
 /* ------------------

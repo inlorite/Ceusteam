@@ -11,7 +11,7 @@
 typedef struct
 {
 	int id;
-	char nombre[20];
+	char* nombre;
 	Hotel* hotel;
 } Empleado;
 

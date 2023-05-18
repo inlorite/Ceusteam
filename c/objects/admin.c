@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "admin.h"
 
 #define RUTAA "../files/BinarioAdmins.dat"
@@ -42,12 +43,18 @@ void imprimirAdmin(Admin a)
 void crearAdmin(Admin* arrayAdmins, int* numAdmins)
 {
 	Admin* a = malloc(sizeof(Admin));
+	char nombre[50];
+	char contrasena[50];
 	a->id = *numAdmins + 1;
 
 	printf("Introduzca el nombre: ");
-	scanf("%s", a->nombre);
+	scanf("%s", nombre);
+	a->nombre = malloc(sizeof(char) * strlen(nombre)+1);
+	strcpy(a->nombre, nombre);
 	printf("Introduzca una contrasena: ");
-	scanf("%s", a->contrasena);
+	scanf("%s", contrasena);
+	a->contrasena = malloc(sizeof(char) * strlen(contrasena)+1);
+	strcpy(a->contrasena, contrasena);
 
 	arrayAdmins[*numAdmins] = *a;
 	(*numAdmins)++;
@@ -72,12 +79,18 @@ void modificarAdmin(Admin* arrayAdmins, int* numAdmins)
 	switch (opcion) {
 		case 1:
 			printf("Introduce el nuevo nombre: ");
-			scanf("%s", arrayAdmins[idAdmin-1].nombre);
+			char nombre[50];
+			scanf("%s", nombre);
+			arrayAdmins[idAdmin-1].nombre = malloc(sizeof(char) * strlen(nombre)+1);
+			strcpy(arrayAdmins[idAdmin-1].nombre, nombre);
 			return;
 
 		case 2:
 			printf("Introduce la nueva contrasena: ");
-			scanf("%s", arrayAdmins[idAdmin-1].contrasena);
+			char contrasena[50];
+			scanf("%s", contrasena);
+			arrayAdmins[idAdmin-1].contrasena = malloc(sizeof(char) * strlen(contrasena)+1);
+			strcpy(arrayAdmins[idAdmin-1].contrasena, contrasena);
 			return;
 	}
 

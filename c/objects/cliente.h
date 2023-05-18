@@ -11,10 +11,10 @@
 typedef struct
 {
 	int id;
-	char nombre[20];
-	char email[50];
+	char* nombre;
+	char* email;
 	int numTelf;
-	char contrasena[20];
+	char* contrasena;
 } Cliente;
 
 typedef struct

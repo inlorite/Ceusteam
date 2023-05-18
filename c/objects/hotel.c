@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "hotel.h"
 
 /* ------------------
@@ -49,8 +50,7 @@ void crearHabitacion(Hotel* h, TipoHab* tiposHabitacion){
 			habitacion.tipoHab=tiposHabitacion[i];
 		}
 	}
-	printf("\nIntroduzca el numero de ocupantes: ");
-	scanf("%d", &habitacion.ocupantes);
+	habitacion.ocupantes = 0;
 	h->habitaciones[h->numHabActuales] = habitacion;
 	h->numHabActuales++;
 }
@@ -133,12 +133,18 @@ void consultarHabitacion(Hotel* h)
 Hotel* crearHotel(int idHotel)
 {
 	Hotel* hotel = malloc(sizeof(Hotel));
+	char nombre[50];
+	char localizacion[50];
 
 	hotel->id = idHotel+1;
 	printf("\nIntroduce el nombre del hotel: ");
-	scanf("%s", hotel->nombre);
+	scanf("%s", nombre);
+	hotel->nombre = malloc(sizeof(char) * strlen(nombre)+1);
+	strcpy(hotel->nombre, nombre);
 	printf("Introduce la localizacion del hotel: ");
-	scanf("%s", hotel->localizacion);
+	scanf("%s", localizacion);
+	hotel->localizacion = malloc(sizeof(char) * strlen(localizacion)+1);
+	strcpy(hotel->localizacion, localizacion);
 	printf("Numero de habitaciones del hotel: ");
 	scanf("%d", &hotel->numHabTotales);
 	hotel->habitaciones =  malloc(sizeof(Habitacion) * hotel->numHabTotales);
@@ -244,12 +250,18 @@ void modificarHotel(Hotel* h, int numHotel,TipoHab *tiposHabitacion){
 	{
 		case 1:
 			printf("Introduzca el nuevo nombre del hotel: ");
-			scanf("%s",h[id-1].nombre);
+			char nombre[50];
+			scanf("%s",nombre);
+			h[id-1].nombre = malloc(sizeof(char) * strlen(nombre)+1);
+			strcpy(h[id-1].nombre, nombre);
 			break;
 
 		case 2:
 			printf("Introduzca la nueva localizacion del hotel:");
-			scanf("%s",h[id-1].localizacion);
+			char localizacion[50];
+			scanf("%s",localizacion);
+			h[id-1].localizacion = malloc(sizeof(char) * strlen(localizacion)+1);
+			strcpy(h[id-1].localizacion, localizacion);
 			break;
 
 		case 3:

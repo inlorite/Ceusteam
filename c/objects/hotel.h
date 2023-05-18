@@ -8,7 +8,7 @@
 
 typedef struct {
 	int id;
-	char* tipo[20];
+	char* tipo;
 	float precio;
 } TipoHab;
 
@@ -20,8 +20,8 @@ typedef struct {
 
 typedef struct {
 	int id;
-	char nombre[20];
-	char localizacion[30];
+	char* nombre;
+	char* localizacion;
 	int numHabTotales;
 	int numHabActuales;
 	Habitacion *habitaciones;

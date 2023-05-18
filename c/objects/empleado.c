@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "empleado.h"
 
 #define RUTA "../files/BinarioEmpleados.dat"
@@ -50,7 +52,7 @@ void escribirBinarioEmpleado(Empleado* arrayEmpleados, int* numEmpleados)
 
 void crearEmpleado(Empleado* arrayEmpleados, int* numEmpleados, Hotel* h, int* numHotel)
 {
-	char nombre[20];
+	char nombre[50];
 	int idHotel;
 
 	for (int i = 0; i < *numHotel; ++i)
@@ -68,6 +70,7 @@ void crearEmpleado(Empleado* arrayEmpleados, int* numEmpleados, Hotel* h, int* n
 	}
 
 	arrayEmpleados[*numEmpleados].id = *numEmpleados + 1;
+	arrayEmpleados[*numEmpleados].nombre = malloc(sizeof(char) * strlen(nombre)+1);
 	strcpy(arrayEmpleados[*numEmpleados].nombre, nombre);
 	arrayEmpleados[*numEmpleados].hotel = recuperarHotel(h, idHotel, *numHotel);
 
@@ -102,7 +105,10 @@ void modificarEmpleado(Empleado* arrayEmpleados, int* numEmpleados, Hotel* h, in
 				case 1:
 					// Modificar el nombre del empleado
 					printf("\n\nIntroduzca el nuevo nombre del empleado: ");
-					scanf("%s", arrayEmpleados[i].nombre);
+					char nombre[50];
+					scanf("%s", nombre);
+					arrayEmpleados[i].nombre = malloc(sizeof(char) * strlen(nombre)+1);
+					strcpy(arrayEmpleados[i].nombre, nombre);
 					printf("Nombre del empleado modificado con exito.\n");
 					return;
 				case 2:

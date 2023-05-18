@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "cliente.h"
 
 #define RUTAC "../files/BinarioClientes.dat"
@@ -75,16 +76,25 @@ void imprimirCliente(Cliente c)
 void crearCliente(Cliente* arrayClientes, int* numClientes)
 {
 	Cliente* c = malloc(sizeof(Cliente));
+	char nombre[50];
+	char email[50];
+	char contrasena[50];
 	c->id = *numClientes + 1;
 
 	printf("Introduzca el nombre: ");
-	scanf("%s", c->nombre);
+	scanf("%s", nombre);
+	c->nombre = malloc(sizeof(char) * strlen(nombre)+1);
+	strcpy(c->nombre, nombre);
 	printf("Introduzca el email: ");
-	scanf("%s", c->email);
+	scanf("%s", email);
+	c->email = malloc(sizeof(char) * strlen(email)+1);
+	strcpy(c->email, email);
 	printf("Introduzca el numero de telefono: ");
 	scanf("%d", &c->numTelf);
 	printf("Introduzca una contrasena: ");
-	scanf("%s", &c->contrasena);
+	scanf("%s", contrasena);
+	c->contrasena = malloc(sizeof(char) * strlen(contrasena)+1);
+	strcpy(c->contrasena, contrasena);
 
 	arrayClientes[*numClientes] = *c;
 	(*numClientes)++;
@@ -111,12 +121,18 @@ void modificarCliente(Cliente* arrayClientes, int* numClientes)
 	switch (opcion) {
 		case 1:
 			printf("Introduce el nuevo nombre: ");
-			scanf("%s", arrayClientes[idCliente-1].nombre);
+			char nombre[50];
+			scanf("%s", nombre);
+			arrayClientes[idCliente-1].nombre = malloc(sizeof(char) * strlen(nombre)+1);
+			strcpy(arrayClientes[idCliente-1].nombre, nombre);
 			return;
 
 		case 2:
 			printf("Introduce el nuevo email: ");
-			scanf("%s", arrayClientes[idCliente-1].email);
+			char email[50];
+			scanf("%s", email);
+			arrayClientes[idCliente-1].email = malloc(sizeof(char) * strlen(email)+1);
+			strcpy(arrayClientes[idCliente-1].email, email);
 			return;
 
 		case 3:
@@ -126,7 +142,10 @@ void modificarCliente(Cliente* arrayClientes, int* numClientes)
 
 		case 4:
 			printf("Introduce la nueva contrasena: ");
-			scanf("%s", arrayClientes[idCliente-1].contrasena);
+			char contrasena[50];
+			scanf("%s", contrasena);
+			arrayClientes[idCliente-1].contrasena = malloc(sizeof(char) * strlen(contrasena)+1);
+			strcpy(arrayClientes[idCliente-1].contrasena, contrasena);
 			return;
 	}
 
