@@ -22,6 +22,11 @@ class Cliente {
 		int getTelf();
 		char* getContrasena();
 
+		void setNombre(char* nombre);
+		void setEmail(char* email);
+		void setTelf(int telf);
+		void setContrasena(char* contrasena);
+
 		Cliente* encontrarCliente(Cliente* clientes, int numClientes, char* nombre);
 };
 

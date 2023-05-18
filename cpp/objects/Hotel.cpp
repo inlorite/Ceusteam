@@ -91,7 +91,7 @@ void Hotel::setNumHabActuales(int numHabActuales)
 
 void Hotel::imprimirHotel()
 {
-	cout << "[" << this->id << " - " << this->nombre << " - " << this->localizacion << "Ocupacion: " << this->numHabActuales << "/"<< this->numHabTotales << "]" << endl;
+	cout << "[" << this->id << " - " << this->nombre << " - " << this->localizacion << " Ocupacion: " << this->numHabActuales << "/"<< this->numHabTotales << "]" << endl;
 }
 
 void Hotel::visualizarHabitacionesHotel()

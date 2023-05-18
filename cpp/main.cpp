@@ -18,7 +18,7 @@ int main(void) {
 	sqlite3 *db;
 	sqlite3_stmt *stmt;
 
-	//sqlite3_open("../hoteles.sqlite", &db);
+	//sqlite3_open("../c/hoteles.sqlite", &db);
 
 	//crearTablas(db, stmt, f);
 
@@ -35,6 +35,7 @@ int main(void) {
 	int numHoteles = 0;
 	int numClientes = 0;
 	int numReservas = 0;
+	int contadorReservas =0;
 
 	Hotel* hoteles = new Hotel[50];
 	Cliente* clientes = new Cliente[30];
@@ -43,30 +44,68 @@ int main(void) {
 
 	char* usuario = new char[20];
 	char* contrasena = new char[20];
+	int telf = 0;
+	char* email = new char[50];
 
+	TipoHab tipo1(1,"Presencial",200);
+	tiposHabitacion[0]=tipo1;
 	Cliente c(1, "test", "test@gmail.com", 111111111, "test");
-
+	Habitacion *habitaciones = new Habitacion[2];
+	Habitacion habitacion1(1,&tipo1,0);
+	habitaciones[0]=habitacion1;
+	Hotel hotel(1,"hotel1","malaga",1,0,habitaciones);
+	hoteles[0]=hotel;
+	numHoteles++;
 	clientes[0] = c;
 	numClientes++;
 
-	while (iniciarSesion == 0)
-	{
-		cout << "Introduzca un usuario:\n";
-		scanf("%s", usuario);
-		cout << "Introduzca la contrasena:\n";
-		scanf("%s", contrasena);
+	cout << "\n\n -------------------------------------------\n"
+					"Introduzca la operacion que quiera realizar: \n"
+					"1. Iniciar sesion.\n"
+					"2. Registrar cliente.\n"
+					"3. Salir.\n\n";
 
-		for (int i = 0; i < numClientes; ++i) {
-			if (strcmp(clientes[i].getNombre(), usuario) == 0) {
-				if (strcmp(clientes[i].getContrasena(), contrasena) == 0) {
-					iniciarSesion = 1;
+			int opcion;
+			scanf("%d", &opcion);
+
+			switch (opcion)
+			{
+				case 1:
+					while (iniciarSesion == 0)
+						{
+							cout << "Introduzca un usuario:\n";
+							scanf("%s", usuario);
+							cout << "Introduzca la contrasena:\n";
+							scanf("%s", contrasena);
+
+							for (int i = 0; i < numClientes; ++i) {
+								if (strcmp(clientes[i].getNombre(), usuario) == 0) {
+									if (strcmp(clientes[i].getContrasena(), contrasena) == 0) {
+										iniciarSesion = 1;
+										break;
+									}
+								}
+							}
+						}
 					break;
-				}
+				case 2:
+					Cliente registrarCliente;
+					cout << "Introduzca un usuario:\n";
+					scanf("%s", usuario);
+					registrarCliente.setNombre(usuario);
+					cout << "Introduzca un email:\n";
+					scanf("%s", email);
+					registrarCliente.setEmail(email);
+					cout << "Introduzca el numero de telefono:\n";
+					scanf("%d", &telf);
+					registrarCliente.setTelf(telf);
+					cout << "Introduzca la contrasena:\n";
+					scanf("%s", contrasena);
+					registrarCliente.setContrasena(contrasena);
+					clientes[numClientes] = registrarCliente;
+					numClientes++;
+					break;
 			}
-		}
-	}
-
-
 	while (seguir)
 	{
 		cout << "\n\n -------------------------------------------\n"
@@ -91,7 +130,7 @@ int main(void) {
 				cout << "\nIntroduzca el ID del hotel que quiera ver: ";
 				scanf("%d", &hotelSeleccionado);
 
-				if (hotelSeleccionado < numHoteles)
+				if (hotelSeleccionado <= numHoteles)
 				{
 					int seguir2 = 1;
 
@@ -115,22 +154,24 @@ int main(void) {
 
 								if (hoteles[hotelSeleccionado-1].getNumHabActuales() < hoteles[hotelSeleccionado-1].getNumHabTotales())
 								{
-									cout << "\nIntroduzca el número de ocupantes (max 5): ";
+									cout << "\nIntroduzca el numero de ocupantes (max 5): ";
 									int ocupantes;
 									scanf("%d", &ocupantes);
 
 									if (ocupantes < 6 && ocupantes > 0)
 									{
 										// Realizar reserva
-										Reserva* nuevaReserva = new Reserva(clientes->encontrarCliente(clientes, numClientes, usuario), &hoteles[hotelSeleccionado-1], hoteles[hotelSeleccionado-1].getNumHabActuales());
+										Reserva* nuevaReserva = new Reserva(clientes->encontrarCliente(clientes, numClientes, usuario), &hoteles[hotelSeleccionado-1], hoteles[hotelSeleccionado-1].getHabitaciones()[hoteles[hotelSeleccionado-1].getNumHabActuales()].getNumHabitacion());
 
 										reservas[numReservas] = *nuevaReserva;
 
 										numReservas++;
 
-										cout << "\nHabitacion numero" << hoteles[hotelSeleccionado-1].getNumHabActuales() << "reservada con éxito.\n" << endl;;
-
 										hoteles[hotelSeleccionado-1].setNumHabActuales(hoteles[hotelSeleccionado-1].getNumHabActuales()+1);
+
+										cout << "\nHabitacion numero " << hoteles[hotelSeleccionado-1].getNumHabActuales() << " reservada con exito.\n" << endl;;
+
+
 									}
 									else
 									{
@@ -159,27 +200,28 @@ int main(void) {
 
 			case 2:
 				// Ver tus reservas
-				Hotel* h = new Hotel();
-				Reserva* pruebaReserva = new Reserva(&c,h,1);
-				reservas[numReservas]= *pruebaReserva;
-				numReservas++;
-				int verReservas =0;
+
+				//Reserva* pruebaReserva = new Reserva(&c,&hoteles[0],1);
+				//reservas[numReservas]= *pruebaReserva;
+
+				contadorReservas = 0;
 				for (int i = 0;i < numReservas; i++) {
 					if (strcmp(reservas[i].getCliente()->getNombre(), usuario) == 0) {
-						verReservas++;
+						contadorReservas++;
 						reservas[i].imprimirReserva();
 					}
 				}
-				if(verReservas==0){
+				if(contadorReservas==0){
 					cout<<"\nNo se han encontrado reservas a su nombre\n"<<endl;
 				}
 				break;
 
-			//case 3:
-			//	seguir = 0;
-			//	break;
+			case 3:
+				seguir = 0;
+
 		}
 	}
 
 	return 0;
 }
+

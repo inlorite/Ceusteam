@@ -62,9 +62,36 @@ char* Cliente::getContrasena()
 	return this->contrasena;
 }
 
+
+
+void Cliente::setNombre(char* nombre)
+{
+	this->nombre = new char[strlen(nombre)+1];
+	strcpy(this->nombre, nombre);
+}
+void Cliente::setEmail(char* email)
+{
+	this->email = new char[strlen(email)+1];
+	strcpy(this->email, email);
+}
+
+void Cliente::setTelf(int telf)
+{
+	this->numTelf = telf;
+}
+
+void Cliente::setContrasena(char* contrasena)
+{
+	this->contrasena = new char[strlen(contrasena)+1];
+	strcpy(this->contrasena, contrasena);
+}
 /////////////////// FUNCIONES ///////////////////////
 
 Cliente* Cliente::encontrarCliente(Cliente* clientes, int numClientes, char* nombre)
 {
-
+	for (int i = 0; i < numClientes; i++) {
+		if(strcmp(clientes[i].getNombre() ,nombre)==0){
+			return &clientes[i];
+		}
+	}
 }
