@@ -40,16 +40,16 @@ int main(void)
 	int numEmpleados = 0;
 	int numReservas = 0;
 	int numAdmins = 0;
+	int numTipoHabs = 0;
 	int iniciarSesion = 0;
 	int seguir;
 	seguir = 1;
 
-
+	/*
 	Admin a = {0, "test", "test"};
 	admins[0] = a;
 	numAdmins++;
 
-	/*
 	Cliente c = {0, "testcliente", "testcliente@gmail.com", 123456789, "contra123"};
 	clientes[0] = c;
 	numClientes++;
@@ -79,16 +79,22 @@ int main(void)
 	guardarDatos(db, stmt, hoteles, idHotel, tiposHabitacion, 3, empleados, numEmpleados, clientes, numClientes, reservas, numReservas, admins, numAdmins, f);
 	*/
 
-	cargarDatos(db, stmt, hoteles, idHotel, tiposHabitacion, 3, clientes, numClientes, reservas, numReservas, f);
-	//cargarAdmins(db, stmt, admins, numAdmins, f);
-	//cargarEmpleados(db, stmt, empleados, numEmpleados, hoteles, f);
+	cargarDatos(db, stmt, hoteles, &idHotel, tiposHabitacion, &numTipoHabs, clientes, &numClientes, reservas, &numReservas, f);
+	cargarAdmins(db, stmt, admins, &numAdmins, f);
+	//cargarEmpleados(db, stmt, empleados, &numEmpleados, hoteles, f);
+
+	printf("%d\n", numAdmins);
+	printf("admin: %s - %s\n", admins[0].nombre, admins[0].contrasena);
+
+	printf("%d\n", idHotel);
+	printf("hotel: %d - %s\n", hoteles[0].id, hoteles[0].nombre);
 
 	printf("\n ======================================\n "
 		   "\tGESTION DE HOTELES\n "
 		   "=========================================\n");
 
-	char* usuario = malloc(sizeof(char) * 20);
-	char* contrasena = malloc(sizeof(char) * 20);
+	char* usuario = malloc(sizeof(char) * 50);
+	char* contrasena = malloc(sizeof(char) * 50);
 
 	printf("Introduzca un usuario:\n");
 	scanf("%s", usuario);
