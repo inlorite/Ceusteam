@@ -43,6 +43,16 @@ int Reserva::getNumHabitacion()
 	return this->numHabitacion;
 }
 
-void Reserva::imprimirReserva(){
-	cout<< "\nReserva: Hotel "<< this->getHotel()->getNombre()<<" habitacion numero "<<this->getNumHabitacion()<<" a nombre de "<<this->getCliente()->getNombre()<<endl;
+void Reserva::imprimirReserva()
+{
+	cout<< "Reserva: Hotel "<< this->getHotel()->getNombre()<<" habitacion numero "<<this->getNumHabitacion()<<" a nombre de "<<this->getCliente()->getNombre()<<endl;
 }
+
+void Reserva::eliminarReserva()
+{
+	this->cliente=NULL;
+	this->hotel=NULL;
+	this->numHabitacion=0;
+
+}
+

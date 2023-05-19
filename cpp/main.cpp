@@ -28,6 +28,7 @@ int main(void) {
 
 
 	int seguir = 1;
+	int seguir3 = 1;
 	int iniciarSesion = 0;
 
 	/* CARGA DE DATOS DESDE LA BD */
@@ -36,6 +37,7 @@ int main(void) {
 	int numClientes = 0;
 	int numReservas = 0;
 	int contadorReservas =0;
+	int reservaSeleccionada;
 
 	Hotel* hoteles = new Hotel[50];
 	Cliente* clientes = new Cliente[30];
@@ -177,6 +179,9 @@ int main(void) {
 
 										hoteles[hotelSeleccionado-1].getHabitaciones()[hoteles[hotelSeleccionado-1].getNumHabActuales()].setOcupantes(ocupantes);
 
+										cout<<"Num ocupantes: "<<hoteles[hotelSeleccionado-1].getHabitaciones()[0].getOcupantes();
+										cout<<"Num ocupantes: "<<habitaciones[1].getOcupantes();
+
 										hoteles[hotelSeleccionado-1].setNumHabActuales(hoteles[hotelSeleccionado-1].getNumHabActuales()+1);
 
 										cout << "\nHabitacion numero " << hoteles[hotelSeleccionado-1].getNumHabActuales() << " reservada con exito.\n" << endl;
@@ -218,13 +223,48 @@ int main(void) {
 				for (int i = 0;i < numReservas; i++) {
 					if (strcmp(reservas[i].getCliente()->getNombre(), usuario) == 0) {
 						contadorReservas++;
+						cout<<i+1<<". ";
 						reservas[i].imprimirReserva();
 					}
 				}
 				if(contadorReservas==0){
 					cout<<"\nNo se han encontrado reservas a su nombre\n"<<endl;
 				}
-				break;
+
+
+				seguir3 = 1;
+				while (seguir3){
+					cout << "\n\nIntroduzca la operacion que quiera realizar: \n"
+						 "1. Eliminar reserva.\n"
+						 "2. Salir.\n\n";
+
+						scanf("%d", &opcion);
+
+						switch (opcion)
+						{
+							case 1:
+
+								cout<<"Selecciona el numero de reserva: ";
+								scanf("%d", &reservaSeleccionada);
+								hoteles[reservas[reservaSeleccionada-1].getHotel()->getId()-1].getHabitaciones()[reservas[reservaSeleccionada-1].getNumHabitacion()-1].setOcupantes(0);
+								hoteles[reservas[reservaSeleccionada-1].getHotel()->getId()-1].setNumHabActuales(hoteles[reservas[reservaSeleccionada-1].getHotel()->getId()-1].getNumHabActuales()-1);
+								cout<<"Num ocupantes: "<<hoteles[reservas[reservaSeleccionada-1].getHotel()->getId()-1].getHabitaciones()[reservas[reservaSeleccionada-1].getNumHabitacion()-1].getOcupantes()<<endl;
+								reservas[reservaSeleccionada-1].eliminarReserva();
+
+								for (int i = reservaSeleccionada-1; i < numReservas-1; i++) {
+									reservas[i]=reservas[i+1];
+								}
+								numReservas--;
+								break;
+
+							case 2:
+								seguir3 = 0;
+
+
+
+						}
+					}
+					break;
 
 			case 3:
 				seguir = 0;

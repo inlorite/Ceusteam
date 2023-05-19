@@ -21,6 +21,7 @@ class Reserva {
 		Hotel* getHotel();
 		int getNumHabitacion();
 		void imprimirReserva();
+		void eliminarReserva();
 };
 
 #endif /* OBJECTS_RESERVA_H_ */
