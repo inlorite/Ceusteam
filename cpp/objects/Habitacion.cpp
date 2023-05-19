@@ -44,6 +44,13 @@ int Habitacion::getOcupantes()
 	return this->ocupantes;
 }
 
+/////////////////// SETTERS ///////////////////////
+
+void Habitacion::setOcupantes(int ocupantes)
+{
+	this->ocupantes = ocupantes;
+}
+
 /////////////////// FUNCIONES ///////////////////////
 
 void Habitacion::imprimirHabitacion()
@@ -59,7 +66,7 @@ void Habitacion::imprimirHabitacion()
 int Habitacion::estaLibre()
 {
 	if (this->ocupantes)
-		return 1;
+		return 0;
 
-	return 0;
+	return 1;
 }

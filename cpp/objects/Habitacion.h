@@ -20,6 +20,8 @@ class Habitacion {
 		TipoHab* getTipoHab();
 		int getOcupantes();
 
+		void setOcupantes(int ocupantes);
+
 		void imprimirHabitacion();
 		int estaLibre();
 };

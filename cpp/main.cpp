@@ -52,8 +52,10 @@ int main(void) {
 	Cliente c(1, "test", "test@gmail.com", 111111111, "test");
 	Habitacion *habitaciones = new Habitacion[2];
 	Habitacion habitacion1(1,&tipo1,0);
+	Habitacion habitacion2(2,&tipo1,0);
 	habitaciones[0]=habitacion1;
-	Hotel hotel(1,"hotel1","malaga",1,0,habitaciones);
+	habitaciones[1]=habitacion2;
+	Hotel hotel(1,"hotel1","malaga",2,0,habitaciones);
 	hoteles[0]=hotel;
 	numHoteles++;
 	clientes[0] = c;
@@ -65,47 +67,52 @@ int main(void) {
 					"2. Registrar cliente.\n"
 					"3. Salir.\n\n";
 
-			int opcion;
-			scanf("%d", &opcion);
+	int opcion;
+	scanf("%d", &opcion);
 
-			switch (opcion)
+	switch (opcion)
+	{
+		case 1:
+			while (iniciarSesion == 0)
 			{
-				case 1:
-					while (iniciarSesion == 0)
-						{
-							cout << "Introduzca un usuario:\n";
-							scanf("%s", usuario);
-							cout << "Introduzca la contrasena:\n";
-							scanf("%s", contrasena);
+				cout << "\nIntroduzca un usuario:\n";
+				scanf("%s", usuario);
+				cout << "Introduzca la contrasena:\n";
+				scanf("%s", contrasena);
 
-							for (int i = 0; i < numClientes; ++i) {
-								if (strcmp(clientes[i].getNombre(), usuario) == 0) {
-									if (strcmp(clientes[i].getContrasena(), contrasena) == 0) {
-										iniciarSesion = 1;
-										break;
-									}
-								}
-							}
+				for (int i = 0; i < numClientes; ++i) {
+					if (strcmp(clientes[i].getNombre(), usuario) == 0) {
+						if (strcmp(clientes[i].getContrasena(), contrasena) == 0) {
+							iniciarSesion = 1;
+							break;
 						}
-					break;
-				case 2:
-					Cliente registrarCliente;
-					cout << "Introduzca un usuario:\n";
-					scanf("%s", usuario);
-					registrarCliente.setNombre(usuario);
-					cout << "Introduzca un email:\n";
-					scanf("%s", email);
-					registrarCliente.setEmail(email);
-					cout << "Introduzca el numero de telefono:\n";
-					scanf("%d", &telf);
-					registrarCliente.setTelf(telf);
-					cout << "Introduzca la contrasena:\n";
-					scanf("%s", contrasena);
-					registrarCliente.setContrasena(contrasena);
-					clientes[numClientes] = registrarCliente;
-					numClientes++;
-					break;
+					}
+				}
+
+				if (iniciarSesion == 0)
+					cout << "\nDatos erroneos." << endl;
 			}
+			break;
+
+		case 2:
+			Cliente registrarCliente;
+			cout << "Introduzca un usuario:\n";
+			scanf("%s", usuario);
+			registrarCliente.setNombre(usuario);
+			cout << "Introduzca un email:\n";
+			scanf("%s", email);
+			registrarCliente.setEmail(email);
+			cout << "Introduzca el numero de telefono:\n";
+			scanf("%d", &telf);
+			registrarCliente.setTelf(telf);
+			cout << "Introduzca la contrasena:\n";
+			scanf("%s", contrasena);
+			registrarCliente.setContrasena(contrasena);
+			clientes[numClientes] = registrarCliente;
+			numClientes++;
+			break;
+	}
+
 	while (seguir)
 	{
 		cout << "\n\n -------------------------------------------\n"
@@ -146,6 +153,7 @@ int main(void) {
 						switch (opcion)
 						{
 							case 1:
+								cout << "\n--- HABITACIONES DE " << hoteles[hotelSeleccionado-1].getNombre() << " ---" << endl;
 								hoteles[hotelSeleccionado-1].visualizarHabitacionesHotel();
 								break;
 
@@ -167,9 +175,11 @@ int main(void) {
 
 										numReservas++;
 
+										hoteles[hotelSeleccionado-1].getHabitaciones()[hoteles[hotelSeleccionado-1].getNumHabActuales()].setOcupantes(ocupantes);
+
 										hoteles[hotelSeleccionado-1].setNumHabActuales(hoteles[hotelSeleccionado-1].getNumHabActuales()+1);
 
-										cout << "\nHabitacion numero " << hoteles[hotelSeleccionado-1].getNumHabActuales() << " reservada con exito.\n" << endl;;
+										cout << "\nHabitacion numero " << hoteles[hotelSeleccionado-1].getNumHabActuales() << " reservada con exito.\n" << endl;
 
 
 									}
