@@ -11,6 +11,35 @@ extern "C" {
 
 using namespace std;
 
+bool esNumero(const std::string& entrada) {
+    // Verificar si la cadena está vacía
+    if (entrada.empty()) {
+        return false;
+    }
+
+    // Verificar cada carácter de la cadena
+    for (char c : entrada) {
+        if (!std::isdigit(c)) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+int comprobarNumero()
+{
+	std::string entrada;
+	std::cin >> entrada;
+	if(esNumero(entrada))
+	{
+		return stoi(entrada);
+	}else{
+		cout<<"Input incorrecto"<<endl;
+	}
+	return 0;
+}
+
 int main(void) {
 	cout << "Programa hecho en cpp" << endl;
 
@@ -67,15 +96,14 @@ int main(void) {
 
 	while (seguir == 1)
 	{
+		int opcion;
 		cout << "\n\n -------------------------------------------\n"
 							"Introduzca la operacion que quiera realizar: \n"
 							"1. Iniciar sesion.\n"
 							"2. Registrar cliente.\n"
 							"3. Salir.\n\n";
-
-		int opcion;
-		scanf("%d", &opcion);
-
+		opcion = comprobarNumero();
+		Cliente registrarCliente;
 		switch (opcion)
 		{
 			case 1:
@@ -102,7 +130,7 @@ int main(void) {
 				break;
 
 			case 2:
-				Cliente registrarCliente;
+
 				cout << "Introduzca un usuario:\n";
 				scanf("%s", usuario);
 				registrarCliente.setNombre(usuario);
@@ -119,9 +147,12 @@ int main(void) {
 				numClientes++;
 				seguir = 0;
 				break;
-		}
+			case 3:
+				return 0;
 
-		cout << "Input incorrecto." << endl;
+		}
+		if(opcion>3 || opcion<1)
+			cout << "Hay que introducir un numero del 1 al 3." << endl;
 	}
 
 	seguir = 1;
@@ -129,14 +160,14 @@ int main(void) {
 
 	while (seguir)
 	{
+		int opcion;
 		cout << "\n\n -------------------------------------------\n"
 				"Introduzca la operacion que quiera realizar: \n"
 				"1. Visualizar la informacion de los hoteles.\n"
 				"2. Ver tus reservas.\n"
 				"3. Salir.\n\n";
 
-		int opcion;
-		scanf("%d", &opcion);
+		opcion = comprobarNumero();
 
 		switch (opcion)
 		{
@@ -149,9 +180,9 @@ int main(void) {
 
 				int hotelSeleccionado;
 				cout << "\nIntroduzca el ID del hotel que quiera ver: ";
-				scanf("%d", &hotelSeleccionado);
+				hotelSeleccionado = comprobarNumero();
 
-				if (hotelSeleccionado <= numHoteles)
+				if (hotelSeleccionado <= numHoteles && hotelSeleccionado!=0)
 				{
 					int seguir2 = 1;
 
@@ -162,7 +193,7 @@ int main(void) {
 								"2. Reservar una habitacion.\n"
 								"3. Salir.\n\n";
 
-						scanf("%d", &opcion);
+						opcion = comprobarNumero();
 
 						switch (opcion)
 						{
@@ -178,7 +209,7 @@ int main(void) {
 								{
 									cout << "\nIntroduzca el numero de ocupantes (max 5): ";
 									int ocupantes;
-									scanf("%d", &ocupantes);
+									ocupantes = comprobarNumero();
 
 									if (ocupantes < 6 && ocupantes > 0)
 									{
@@ -226,11 +257,13 @@ int main(void) {
 								seguir2 = 0;
 								break;
 						}
+						if(opcion>3 || opcion<1)
+							cout << "Hay que introducir un numero del 1 al 3." << endl;
 					}
 				}
 				else
 				{
-					cout << "\nEl hotel con ID " << opcion << " no existe.";
+					cout << "\nEl hotel no existe."<<endl;
 				}
 
 				break;
@@ -260,31 +293,37 @@ int main(void) {
 						 "1. Eliminar reserva.\n"
 						 "2. Salir.\n\n";
 
-						scanf("%d", &opcion);
+					opcion = comprobarNumero();
 
 						switch (opcion)
 						{
 							case 1:
 
 								cout<<"Selecciona el numero de reserva: ";
-								scanf("%d", &reservaSeleccionada);
-								hoteles[reservas[reservaSeleccionada-1].getHotel()->getId()-1].getHabitaciones()[reservas[reservaSeleccionada-1].getNumHabitacion()-1].setOcupantes(0);
-								hoteles[reservas[reservaSeleccionada-1].getHotel()->getId()-1].setNumHabActuales(hoteles[reservas[reservaSeleccionada-1].getHotel()->getId()-1].getNumHabActuales()-1);
-								cout<<"Num ocupantes: "<<hoteles[reservas[reservaSeleccionada-1].getHotel()->getId()-1].getHabitaciones()[reservas[reservaSeleccionada-1].getNumHabitacion()-1].getOcupantes()<<endl;
-								reservas[reservaSeleccionada-1].eliminarReserva();
+								reservaSeleccionada = comprobarNumero();
+								if(reservaSeleccionada!=0 && reservaSeleccionada<=numReservas)
+								{
+									hoteles[reservas[reservaSeleccionada-1].getHotel()->getId()-1].getHabitaciones()[reservas[reservaSeleccionada-1].getNumHabitacion()-1].setOcupantes(0);
+									hoteles[reservas[reservaSeleccionada-1].getHotel()->getId()-1].setNumHabActuales(hoteles[reservas[reservaSeleccionada-1].getHotel()->getId()-1].getNumHabActuales()-1);
+									cout<<"Num ocupantes: "<<hoteles[reservas[reservaSeleccionada-1].getHotel()->getId()-1].getHabitaciones()[reservas[reservaSeleccionada-1].getNumHabitacion()-1].getOcupantes()<<endl;
+									reservas[reservaSeleccionada-1].eliminarReserva();
 
-								for (int i = reservaSeleccionada-1; i < numReservas-1; i++) {
-									reservas[i]=reservas[i+1];
+									for (int i = reservaSeleccionada-1; i < numReservas-1; i++) {
+										reservas[i]=reservas[i+1];
+									}
+									numReservas--;
+								}else{
+									cout << "\nLa reserva no existe."<<endl;
 								}
-								numReservas--;
 								break;
 
 							case 2:
 								seguir3 = 0;
 
-
-
 						}
+						if(opcion>2 || opcion<1)
+							cout << "Hay que introducir un numero del 1 al 2." << endl;
+
 					}
 					break;
 
@@ -292,8 +331,9 @@ int main(void) {
 				seguir = 0;
 
 		}
+		if(opcion>3 || opcion<1)
+			cout << "Hay que introducir un numero del 1 al 3." << endl;
 	}
 
 	return 0;
 }
-
