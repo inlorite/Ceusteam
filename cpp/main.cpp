@@ -171,20 +171,30 @@ int main(void) {
 									if (ocupantes < 6 && ocupantes > 0)
 									{
 										// Realizar reserva
-										Reserva* nuevaReserva = new Reserva(clientes->encontrarCliente(clientes, numClientes, usuario), &hoteles[hotelSeleccionado-1], hoteles[hotelSeleccionado-1].getHabitaciones()[hoteles[hotelSeleccionado-1].getNumHabActuales()].getNumHabitacion());
+										int numHabitacionReserva;
+
+										for (int i = 0; i < hoteles[hotelSeleccionado-1].getNumHabTotales(); ++i) {
+											if (hoteles[hotelSeleccionado-1].getHabitaciones()[i].estaLibre())
+											{
+												numHabitacionReserva = hoteles[hotelSeleccionado-1].getHabitaciones()[i].getNumHabitacion();
+												break;
+											}
+										}
+
+										Reserva* nuevaReserva = new Reserva(clientes->encontrarCliente(clientes, numClientes, usuario), &hoteles[hotelSeleccionado-1], numHabitacionReserva);
 
 										reservas[numReservas] = *nuevaReserva;
 
 										numReservas++;
 
-										hoteles[hotelSeleccionado-1].getHabitaciones()[hoteles[hotelSeleccionado-1].getNumHabActuales()].setOcupantes(ocupantes);
+										hoteles[hotelSeleccionado-1].getHabitaciones()[numHabitacionReserva-1].setOcupantes(ocupantes);
 
 										cout<<"Num ocupantes: "<<hoteles[hotelSeleccionado-1].getHabitaciones()[0].getOcupantes();
 										cout<<"Num ocupantes: "<<habitaciones[1].getOcupantes();
 
 										hoteles[hotelSeleccionado-1].setNumHabActuales(hoteles[hotelSeleccionado-1].getNumHabActuales()+1);
 
-										cout << "\nHabitacion numero " << hoteles[hotelSeleccionado-1].getNumHabActuales() << " reservada con exito.\n" << endl;
+										cout << "\nHabitacion numero " << numHabitacionReserva << " reservada con exito.\n" << endl;
 
 
 									}
