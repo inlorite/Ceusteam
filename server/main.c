@@ -84,22 +84,21 @@ int main(int argc, char *argv[]) {
 
 		printf("Command received: %s \n", recvBuff);
 
+
+		// REGISTRAR CLIENTE
 		if (strcmp(recvBuff, "REGISTRAR CLIENTE") == 0)
 		{
-			int id;
-			char* nombre;
-			char* email;
-			int numTelf;
-			char* contrasena;
 
 			recv(comm_socket, recvBuff, sizeof(recvBuff), 0);
 			if (strcmp(recvBuff, "REGISTRAR CLIENTE-END") != 0)
 			{
+				char* nombre;
 				strcpy(nombre, recvBuff);
 
 				recv(comm_socket, recvBuff, sizeof(recvBuff), 0);
 				if (strcmp(recvBuff, "REGISTRAR CLIENTE-END") != 0)
 				{
+					char* email;
 					strcpy(email, recvBuff);
 
 					recv(comm_socket, recvBuff, sizeof(recvBuff), 0);
@@ -110,42 +109,85 @@ int main(int argc, char *argv[]) {
 						recv(comm_socket, recvBuff, sizeof(recvBuff), 0);
 						if (strcmp(recvBuff, "REGISTRAR CLIENTE-END") != 0)
 						{
+							char* contrasena;
 							strcpy(contrasena, recvBuff);
 
 							recv(comm_socket, recvBuff, sizeof(recvBuff), 0);
 							int id = atoi(recvBuff);
 
-							// GUARDAR CLIENTE
+							// GUARDAR CLIENTE EN LA BD
+							// insertarCliente(id, nombre, email, numTelf, contrasena);
 						}
 					}
 				}
 			}
 		}
 
-		if (strcmp(recvBuff, "RAIZ") == 0)
+
+		// ANADIR RESERVA
+		if (strcmp(recvBuff, "ANADIR RESERVA") == 0)
 		{
 			recv(comm_socket, recvBuff, sizeof(recvBuff), 0);
-			int n = atoi(recvBuff);
-			float raiz = sqrt(n);
 
-			recv(comm_socket, recvBuff, sizeof(recvBuff), 0);
-			if (strcmp(recvBuff, "RAIZ-END") == 0); // Nada que hacer
+			if (strcmp(recvBuff, "ANADIR RESERVA-END") != 0)
+			{
+				int idCliente = atoi(recvBuff);
+				recv(comm_socket, recvBuff, sizeof(recvBuff), 0);
 
-			sprintf(sendBuff, "%f", raiz);
-			send(comm_socket, sendBuff, sizeof(sendBuff), 0);
-			printf("Response sent: %s \n", sendBuff);
+				if (strcmp(recvBuff, "ANADIR RESERVA-END") != 0)
+				{
+					int idHotel = atoi(recvBuff);
+					recv(comm_socket, recvBuff, sizeof(recvBuff), 0);
+
+					if (strcmp(recvBuff, "ANADIR RESERVA-END") != 0)
+					{
+						int numHabitacion = atoi(recvBuff);
+						recv(comm_socket, recvBuff, sizeof(recvBuff), 0);
+
+						// ANADIR LA RESERVA EN LA BD
+						// insertarReserva(idCliente, idHotel, numHabitacion);
+
+						// ACTUALIZAR HABITACION
+						recv(comm_socket, recvBuff, sizeof(recvBuff), 0);
+						int ocupantes = atoi(recvBuff);
+						// updateHabitacion(idHotel, numHabitacion, ocupantes);
+
+						// ACTUALIZAR HOTEL
+						// updateHotel(idHotel, +1); // Incrementamos el atributo numHabActuales
+					}
+				}
+			}
 		}
 
-		if (strcmp(recvBuff, "IP") == 0)
+
+		// ELIMINAR RESERVA
+		if (strcmp(recvBuff, "ELIMINAR RESERVA") == 0)
 		{
 			recv(comm_socket, recvBuff, sizeof(recvBuff), 0);
-			if (strcmp(recvBuff, "IP-END") == 0); // Nada que hacer
 
-			strcpy(sendBuff, inet_ntoa(server.sin_addr));
-			send(comm_socket, sendBuff, sizeof(sendBuff), 0);
-			printf("Response sent: %s \n", sendBuff);
+			if (strcmp(recvBuff, "ELIMINAR RESERVA-END") != 0)
+			{
+				int idCliente = atoi(recvBuff);
+				recv(comm_socket, recvBuff, sizeof(recvBuff), 0);
+
+				if (strcmp(recvBuff, "ELIMINAR RESERVA-END") != 0)
+				{
+					int idHotel = atoi(recvBuff);
+
+					// ELIMINAR LA RESERVA DE LA BD
+					// eliminarReserva(idCliente, idHotel, numHabitacion);
+
+					// ACTUALIZAR HABITACION
+					// updateHabitacion(idHotel, numHabitacion, 0);
+
+					// ACTUALIZAR HOTEL
+					// updateHotel(idHotel, -1); // Decrementamos el atributo numHabActuales
+				}
+			}
 		}
 
+
+		// SALIR
 		if (strcmp(recvBuff, "EXIT") == 0)
 			break;
 
