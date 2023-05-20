@@ -11,6 +11,8 @@
 
 int main(void)
 {
+	//////////// PROGRAMA PRINCIPAL ////////////
+
 	FILE* f;
 	sqlite3 *db;
 	sqlite3_stmt *stmt;

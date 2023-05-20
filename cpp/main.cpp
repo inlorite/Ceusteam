@@ -5,6 +5,11 @@
 #include "objects/Empleado.h"
 #include "objects/Reserva.h"
 
+#include <winsock2.h>
+
+#define SERVER_IP "127.0.0.1"
+#define SERVER_PORT 6000
+
 extern "C" {
 	#include "../c/data/sql.h"
 }
@@ -50,6 +55,51 @@ int main(void) {
 	//sqlite3_open("../c/hoteles.sqlite", &db);
 
 	//crearTablas(db, stmt, f);
+
+
+	//////////// SOCKET ////////////
+	/*
+	WSADATA wsaData;
+	SOCKET s;
+	struct sockaddr_in server;
+	char sendBuff[512], recvBuff[512];
+
+	printf("\nInitialising Winsock...\n");
+	if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0)
+	{
+		printf("Failed. Error Code : %d", WSAGetLastError());
+		return -1;
+	}
+
+	printf("Initialised.\n");
+
+	//SOCKET creation
+	if ((s = socket(AF_INET, SOCK_STREAM, 0)) == INVALID_SOCKET)
+	{
+		printf("Could not create socket : %d", WSAGetLastError());
+		WSACleanup();
+		return -1;
+	}
+
+	printf("Socket created.\n");
+
+	server.sin_addr.s_addr = inet_addr(SERVER_IP);
+	server.sin_family = AF_INET;
+	server.sin_port = htons(SERVER_PORT);
+
+	//CONNECT to remote server
+	if (connect(s, (struct sockaddr*) &server, sizeof(server)) == SOCKET_ERROR)
+	{
+		printf("Connection error: %d", WSAGetLastError());
+		closesocket(s);
+		WSACleanup();
+		return -1;
+	}
+
+	printf("Connection stablished with: %s (%d)\n", inet_ntoa(server.sin_addr), ntohs(server.sin_port));
+	*/
+
+	//////////// PROGRAMA PRINCIPAL ////////////
 
 	cout << "\n ======================================\n "
 			   "\t RESERVA DE HOTELES\n "
@@ -295,37 +345,37 @@ int main(void) {
 
 					opcion = comprobarNumero();
 
-						switch (opcion)
-						{
-							case 1:
+					switch (opcion)
+					{
+						case 1:
 
-								cout<<"Selecciona el numero de reserva: ";
-								reservaSeleccionada = comprobarNumero();
-								if(reservaSeleccionada!=0 && reservaSeleccionada<=numReservas)
-								{
-									hoteles[reservas[reservaSeleccionada-1].getHotel()->getId()-1].getHabitaciones()[reservas[reservaSeleccionada-1].getNumHabitacion()-1].setOcupantes(0);
-									hoteles[reservas[reservaSeleccionada-1].getHotel()->getId()-1].setNumHabActuales(hoteles[reservas[reservaSeleccionada-1].getHotel()->getId()-1].getNumHabActuales()-1);
-									cout<<"Num ocupantes: "<<hoteles[reservas[reservaSeleccionada-1].getHotel()->getId()-1].getHabitaciones()[reservas[reservaSeleccionada-1].getNumHabitacion()-1].getOcupantes()<<endl;
-									reservas[reservaSeleccionada-1].eliminarReserva();
+							cout<<"Selecciona el numero de reserva: ";
+							reservaSeleccionada = comprobarNumero();
+							if(reservaSeleccionada!=0 && reservaSeleccionada<=numReservas)
+							{
+								hoteles[reservas[reservaSeleccionada-1].getHotel()->getId()-1].getHabitaciones()[reservas[reservaSeleccionada-1].getNumHabitacion()-1].setOcupantes(0);
+								hoteles[reservas[reservaSeleccionada-1].getHotel()->getId()-1].setNumHabActuales(hoteles[reservas[reservaSeleccionada-1].getHotel()->getId()-1].getNumHabActuales()-1);
+								cout<<"Num ocupantes: "<<hoteles[reservas[reservaSeleccionada-1].getHotel()->getId()-1].getHabitaciones()[reservas[reservaSeleccionada-1].getNumHabitacion()-1].getOcupantes()<<endl;
+								reservas[reservaSeleccionada-1].eliminarReserva();
 
-									for (int i = reservaSeleccionada-1; i < numReservas-1; i++) {
-										reservas[i]=reservas[i+1];
-									}
-									numReservas--;
-								}else{
-									cout << "\nLa reserva no existe."<<endl;
+								for (int i = reservaSeleccionada-1; i < numReservas-1; i++) {
+									reservas[i]=reservas[i+1];
 								}
-								break;
+								numReservas--;
+							}else{
+								cout << "\nLa reserva no existe."<<endl;
+							}
+							break;
 
-							case 2:
-								seguir3 = 0;
-
-						}
-						if(opcion>2 || opcion<1)
-							cout << "Hay que introducir un numero del 1 al 2." << endl;
+						case 2:
+							seguir3 = 0;
 
 					}
-					break;
+					if(opcion>2 || opcion<1)
+						cout << "Hay que introducir un numero del 1 al 2." << endl;
+
+				}
+				break;
 
 			case 3:
 				seguir = 0;
