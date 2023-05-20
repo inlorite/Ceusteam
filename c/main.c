@@ -82,7 +82,6 @@ int main(void)
 	guardarDatos(db, stmt, hoteles, idHotel, tiposHabitacion, numTipoHabs, empleados, numEmpleados, clientes, numClientes, reservas, numReservas, admins, numAdmins, f);
 	*/
 
-	//cargarDatos(db, stmt, hoteles, &idHotel, tiposHabitacion, &numTipoHabs, clientes, &numClientes, reservas, &numReservas, f);
 	cargarTiposHabitaciones(db, stmt, tiposHabitacion, &numTipoHabs, f);
 	cargarHoteles(db, stmt, hoteles, &idHotel, tiposHabitacion, f);
 	cargarHabitacionesHoteles(db, stmt, tiposHabitacion, hoteles, idHotel, f);
@@ -269,6 +268,11 @@ int main(void)
 	} else {
 		printf("\nEl usuario o la contrasena son incorrectos.");
 	}
+
+	borrarTablas(db, stmt, f);
+	crearTablas(db, stmt, f);
+
+	guardarDatos(db, stmt, hoteles, idHotel, tiposHabitacion, numTipoHabs, empleados, numEmpleados, clientes, numClientes, reservas, numReservas, admins, numAdmins, f);
 
 	sqlite3_close(db);
 	fclose(f);
