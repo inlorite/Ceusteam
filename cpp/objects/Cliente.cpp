@@ -62,7 +62,10 @@ char* Cliente::getContrasena()
 	return this->contrasena;
 }
 
-
+void Cliente::setId(int id)
+{
+	this->id=id;
+}
 
 void Cliente::setNombre(char* nombre)
 {

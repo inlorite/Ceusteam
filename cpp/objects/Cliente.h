@@ -22,6 +22,7 @@ class Cliente {
 		int getTelf();
 		char* getContrasena();
 
+		void setId(int id);
 		void setNombre(char* nombre);
 		void setEmail(char* email);
 		void setTelf(int telf);

@@ -180,22 +180,32 @@ int main(void) {
 				break;
 
 			case 2:
-
+				seguir = 1;
 				cout << "Introduzca un usuario:\n";
 				scanf("%s", usuario);
 				registrarCliente.setNombre(usuario);
 				cout << "Introduzca un email:\n";
 				scanf("%s", email);
 				registrarCliente.setEmail(email);
-				cout << "Introduzca el numero de telefono:\n";
-				scanf("%d", &telf);
-				registrarCliente.setTelf(telf);
+				while(seguir)
+				{
+					cout << "Introduzca el numero de telefono:\n";
+					telf = comprobarNumero();
+					if(telf!=0){
+						registrarCliente.setTelf(telf);
+						seguir = 0;
+						break;
+					}
+					cout<<"Introduzca un numero, no caracteres"<<endl;
+				}
 				cout << "Introduzca la contrasena:\n";
 				scanf("%s", contrasena);
 				registrarCliente.setContrasena(contrasena);
+				registrarCliente.setId(numClientes+1);
 				clientes[numClientes] = registrarCliente;
 				numClientes++;
 				seguir = 0;
+
 				break;
 			case 3:
 				return 0;
