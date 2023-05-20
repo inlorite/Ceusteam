@@ -4,6 +4,9 @@
 #include <winsock2.h>
 #include <math.h>
 
+#include "../c/objects/cliente.h"
+#include "../c/objects/hotel.h"
+
 #define SERVER_IP "127.0.0.1"
 #define SERVER_PORT 6000
 
@@ -81,19 +84,42 @@ int main(int argc, char *argv[]) {
 
 		printf("Command received: %s \n", recvBuff);
 
-		if (strcmp(recvBuff, "SUMAR") == 0)
+		if (strcmp(recvBuff, "REGISTRAR CLIENTE") == 0)
 		{
-			int suma = 0;
+			int id;
+			char* nombre;
+			char* email;
+			int numTelf;
+			char* contrasena;
+
 			recv(comm_socket, recvBuff, sizeof(recvBuff), 0);
-			while (strcmp(recvBuff, "SUMAR-END") != 0)
+			if (strcmp(recvBuff, "REGISTRAR CLIENTE-END") != 0)
 			{
-				int n = atoi(recvBuff);
-				suma += n;
+				strcpy(nombre, recvBuff);
+
 				recv(comm_socket, recvBuff, sizeof(recvBuff), 0);
+				if (strcmp(recvBuff, "REGISTRAR CLIENTE-END") != 0)
+				{
+					strcpy(email, recvBuff);
+
+					recv(comm_socket, recvBuff, sizeof(recvBuff), 0);
+					if (strcmp(recvBuff, "REGISTRAR CLIENTE-END") != 0)
+					{
+						int numTelf = atoi(recvBuff);
+
+						recv(comm_socket, recvBuff, sizeof(recvBuff), 0);
+						if (strcmp(recvBuff, "REGISTRAR CLIENTE-END") != 0)
+						{
+							strcpy(contrasena, recvBuff);
+
+							recv(comm_socket, recvBuff, sizeof(recvBuff), 0);
+							int id = atoi(recvBuff);
+
+							// GUARDAR CLIENTE
+						}
+					}
+				}
 			}
-			sprintf(sendBuff, "%d", suma);
-			send(comm_socket, sendBuff, sizeof(sendBuff), 0);
-			printf("Response sent: %s \n", sendBuff);
 		}
 
 		if (strcmp(recvBuff, "RAIZ") == 0)
