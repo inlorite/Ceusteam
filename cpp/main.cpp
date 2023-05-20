@@ -63,57 +63,69 @@ int main(void) {
 	clientes[0] = c;
 	numClientes++;
 
-	cout << "\n\n -------------------------------------------\n"
-					"Introduzca la operacion que quiera realizar: \n"
-					"1. Iniciar sesion.\n"
-					"2. Registrar cliente.\n"
-					"3. Salir.\n\n";
 
-	int opcion;
-	scanf("%d", &opcion);
 
-	switch (opcion)
+	while (seguir == 1)
 	{
-		case 1:
-			while (iniciarSesion == 0)
-			{
-				cout << "\nIntroduzca un usuario:\n";
-				scanf("%s", usuario);
-				cout << "Introduzca la contrasena:\n";
-				scanf("%s", contrasena);
+		cout << "\n\n -------------------------------------------\n"
+							"Introduzca la operacion que quiera realizar: \n"
+							"1. Iniciar sesion.\n"
+							"2. Registrar cliente.\n"
+							"3. Salir.\n\n";
 
-				for (int i = 0; i < numClientes; ++i) {
-					if (strcmp(clientes[i].getNombre(), usuario) == 0) {
-						if (strcmp(clientes[i].getContrasena(), contrasena) == 0) {
-							iniciarSesion = 1;
-							break;
+		int opcion;
+		scanf("%d", &opcion);
+
+		switch (opcion)
+		{
+			case 1:
+				while (iniciarSesion == 0)
+				{
+					cout << "\nIntroduzca un usuario:\n";
+					scanf("%s", usuario);
+					cout << "Introduzca la contrasena:\n";
+					scanf("%s", contrasena);
+
+					for (int i = 0; i < numClientes; ++i) {
+						if (strcmp(clientes[i].getNombre(), usuario) == 0) {
+							if (strcmp(clientes[i].getContrasena(), contrasena) == 0) {
+								iniciarSesion = 1;
+								break;
+							}
 						}
 					}
+
+					if (iniciarSesion == 0)
+						cout << "\nDatos erroneos." << endl;
 				}
+				seguir = 0;
+				break;
 
-				if (iniciarSesion == 0)
-					cout << "\nDatos erroneos." << endl;
-			}
-			break;
+			case 2:
+				Cliente registrarCliente;
+				cout << "Introduzca un usuario:\n";
+				scanf("%s", usuario);
+				registrarCliente.setNombre(usuario);
+				cout << "Introduzca un email:\n";
+				scanf("%s", email);
+				registrarCliente.setEmail(email);
+				cout << "Introduzca el numero de telefono:\n";
+				scanf("%d", &telf);
+				registrarCliente.setTelf(telf);
+				cout << "Introduzca la contrasena:\n";
+				scanf("%s", contrasena);
+				registrarCliente.setContrasena(contrasena);
+				clientes[numClientes] = registrarCliente;
+				numClientes++;
+				seguir = 0;
+				break;
+		}
 
-		case 2:
-			Cliente registrarCliente;
-			cout << "Introduzca un usuario:\n";
-			scanf("%s", usuario);
-			registrarCliente.setNombre(usuario);
-			cout << "Introduzca un email:\n";
-			scanf("%s", email);
-			registrarCliente.setEmail(email);
-			cout << "Introduzca el numero de telefono:\n";
-			scanf("%d", &telf);
-			registrarCliente.setTelf(telf);
-			cout << "Introduzca la contrasena:\n";
-			scanf("%s", contrasena);
-			registrarCliente.setContrasena(contrasena);
-			clientes[numClientes] = registrarCliente;
-			numClientes++;
-			break;
+		cout << "Input incorrecto." << endl;
 	}
+
+	seguir = 1;
+
 
 	while (seguir)
 	{
