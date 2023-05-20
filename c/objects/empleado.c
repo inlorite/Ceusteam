@@ -173,7 +173,7 @@ void consultarPlantilla(Empleado* arrayEmpleados, int* numEmpleados, Hotel* h, i
 	printf("\n[EMPLEADOS EN PLANTILLA]\n"
 			"------------------------\n");
 	for (int i = 0; i < *numEmpleados; ++i) {
-		if (arrayEmpleados[i].hotel->id == idHotel)
+		if (arrayEmpleados[i].hotel->id == idHotel-1)
 			printf("ID: %d, Nombre: %s\n", arrayEmpleados[i].id, arrayEmpleados[i].nombre);
 	}
 }

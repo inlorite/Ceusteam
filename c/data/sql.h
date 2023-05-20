@@ -17,9 +17,9 @@ void cargarDatos(sqlite3* db, sqlite3_stmt* stmt, Hotel* hoteles, int* numHotele
 
 void cargarTiposHabitaciones(sqlite3* db, sqlite3_stmt* stmt, TipoHab* tiposHabitaciones, int* numTiposHabitaciones, FILE* f);
 
-void cargarHabitacionesHoteles(sqlite3* db, sqlite3_stmt* stmt, TipoHab* tiposHabitaciones, Habitacion* habitaciones, int numHabitacionesTotales, int idHotel, FILE* f);
-
 void cargarHoteles(sqlite3* db, sqlite3_stmt* stmt, Hotel* hoteles, int* numHoteles, TipoHab* tiposHabitaciones, FILE* f);
+
+void cargarHabitacionesHoteles(sqlite3* db, sqlite3_stmt* stmt, TipoHab* tiposHabitaciones, Hotel* hoteles, int numHoteles, FILE* f);
 
 void cargarClientes(sqlite3* db, sqlite3_stmt* stmt, Cliente* clientes, int* numClientes, FILE* f);
 

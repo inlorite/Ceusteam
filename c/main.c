@@ -21,8 +21,8 @@ int main(void)
 	fprintf(f, "\n-+- Nueva ejecucion del programa -+-\n");
 	sqlite3_open("../hoteles.sqlite", &db);
 
-	borrarTablas(db, stmt, f);
-	crearTablas(db, stmt, f);
+	//borrarTablas(db, stmt, f);
+	//crearTablas(db, stmt, f);
 
 	Hotel* hoteles = malloc(sizeof(Hotel) * 50);
 	Cliente* clientes = malloc(sizeof(Cliente) * 30);
@@ -31,43 +31,47 @@ int main(void)
 	Reserva* reservas = malloc(sizeof(Reserva) * 50);
 	Admin* admins = malloc(sizeof(Admin) * 10);
 
-	tiposHabitacion[0].id=1;strcpy(tiposHabitacion[0].tipo,"Presidencial");tiposHabitacion[0].precio=300;
-	tiposHabitacion[1].id=2;strcpy(tiposHabitacion[1].tipo,"Suite");tiposHabitacion[1].precio=150;
-	tiposHabitacion[2].id=3;strcpy(tiposHabitacion[2].tipo,"Estandar");tiposHabitacion[2].precio=75;
-
 	int idHotel = 0;
 	int numClientes = 0;
 	int numEmpleados = 0;
 	int numReservas = 0;
 	int numAdmins = 0;
-	int numTipoHabs = 3;
+	int numTipoHabs = 0;
 	int iniciarSesion = 0;
 	int seguir;
 	seguir = 1;
 
-	Admin a = {0, "test", "test"};
+	/*
+	TipoHab th1 = {1, "Presidencial", 300};
+	tiposHabitacion[0] = th1;
+	TipoHab th2 = {2, "Suite", 150};
+	tiposHabitacion[1] = th2;
+	TipoHab th3 = {3, "Estandar", 75};
+	tiposHabitacion[2] = th3;
+
+	Admin a = {1, "test", "test"};
 	admins[0] = a;
 	numAdmins++;
 
-	Cliente c = {0, "testcliente", "testcliente@gmail.com", 123456789, "contra123"};
+	Cliente c = {1, "testcliente", "testcliente@gmail.com", 123456789, "contra123"};
 	clientes[0] = c;
 	numClientes++;
 
 	Habitacion* habitaciones = malloc(sizeof(Habitacion) * 2);
 	int numHabitaciones = 0;
 
-	Habitacion hab1 = {0, tiposHabitacion[0], 15};
+	Habitacion hab1 = {1, tiposHabitacion[0], 15};
 	habitaciones[0] = hab1;
 	numHabitaciones++;
-	Habitacion hab2 = {1, tiposHabitacion[1], 46};
+	Habitacion hab2 = {2, tiposHabitacion[1], 46};
 	habitaciones[1] = hab2;
 	numHabitaciones++;
 
-	Hotel h = {0, "hotel1", "bilbao", numHabitaciones, numHabitaciones, habitaciones};
+	Hotel h = {1, "hotel1", "bilbao", numHabitaciones, numHabitaciones, habitaciones};
 	hoteles[0] = h;
 	idHotel++;
 
-	Empleado e = {0, "fran", &hoteles[0]};
+	Empleado e = {1, "fran", &hoteles[0]};
 	empleados[0] = e;
 	numEmpleados++;
 
@@ -76,22 +80,25 @@ int main(void)
 	numReservas++;
 
 	guardarDatos(db, stmt, hoteles, idHotel, tiposHabitacion, numTipoHabs, empleados, numEmpleados, clientes, numClientes, reservas, numReservas, admins, numAdmins, f);
+	*/
 
 	//cargarDatos(db, stmt, hoteles, &idHotel, tiposHabitacion, &numTipoHabs, clientes, &numClientes, reservas, &numReservas, f);
-	//cargarTiposHabitaciones(db, stmt, tiposHabitacion, &numTipoHabs, f);
-	/*
+	cargarTiposHabitaciones(db, stmt, tiposHabitacion, &numTipoHabs, f);
 	cargarHoteles(db, stmt, hoteles, &idHotel, tiposHabitacion, f);
+	cargarHabitacionesHoteles(db, stmt, tiposHabitacion, hoteles, idHotel, f);
 	cargarClientes(db, stmt, clientes, &numClientes, f);
 	cargarReservas(db, stmt, reservas, &numReservas, clientes, hoteles, f);
-	*/
-	//cargarAdmins(db, stmt, admins, &numAdmins, f);
-	//cargarEmpleados(db, stmt, empleados, &numEmpleados, hoteles, f);
+	cargarAdmins(db, stmt, admins, &numAdmins, f);
+	cargarEmpleados(db, stmt, empleados, &numEmpleados, hoteles, f);
 
-	//printf("%d\n", numAdmins);
-	//printf("admin: %s - %s\n", admins[0].nombre, admins[0].contrasena);
+	printf("%d\n", numAdmins);
+	printf("admin: %s - %s\n", admins[0].nombre, admins[0].contrasena);
 
-	//printf("%d\n", idHotel);
-	//printf("hotel: %d - %s\n", hoteles[0].id, hoteles[0].nombre);
+	printf("%d\n", idHotel);
+	printf("hotel: %d - %s\n", hoteles[0].id, hoteles[0].nombre);
+
+	printf("%d\n", numEmpleados);
+	printf("empleado: %d - %s\n", empleados[0].hotel->id, empleados[0].nombre);
 
 	printf("\n ======================================\n "
 		   "\tGESTION DE HOTELES\n "
