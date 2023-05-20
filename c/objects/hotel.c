@@ -38,21 +38,25 @@ void crearHabitacion(Hotel* h, TipoHab* tiposHabitacion){
 	Habitacion habitacion;
 	int numTipo;
 
-	habitacion.num_habitacion=(h->numHabActuales)+1;
-	printf("\nIntroduzca el numero del tipo de habitacion: ");
-	for (int i = 0; i < 3; ++i) {
-		printf("\n%d. %s con precio por noche %.2f",tiposHabitacion[i].id,tiposHabitacion[i].tipo,tiposHabitacion[i].precio);
-	}
-	printf("\n");
-	scanf("%d", &numTipo);
-	for (int i = 0; i < 3; ++i) {
-		if(tiposHabitacion[i].id==numTipo){
-			habitacion.tipoHab=tiposHabitacion[i];
+	if (h->numHabActuales < h->numHabTotales) {
+		habitacion.num_habitacion=(h->numHabActuales)+1;
+		printf("\nIntroduzca el numero del tipo de habitacion: ");
+		for (int i = 0; i < 3; ++i) {
+			printf("\n%d. %s con precio por noche %.2f",tiposHabitacion[i].id,tiposHabitacion[i].tipo,tiposHabitacion[i].precio);
 		}
+		printf("\n");
+		scanf("%d", &numTipo);
+		for (int i = 0; i < 3; ++i) {
+			if(tiposHabitacion[i].id==numTipo){
+				habitacion.tipoHab=tiposHabitacion[i];
+			}
+		}
+		habitacion.ocupantes = 0;
+		h->habitaciones[h->numHabActuales] = habitacion;
+		h->numHabActuales++;
+	} else {
+		printf("\nNumero maximo de habitaciones alcanzado.");
 	}
-	habitacion.ocupantes = 0;
-	h->habitaciones[h->numHabActuales] = habitacion;
-	h->numHabActuales++;
 }
 
 void eliminarHabitacion(Habitacion habitaciones[], int *num_habitaciones)
