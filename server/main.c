@@ -90,37 +90,25 @@ int main(int argc, char *argv[]) {
 		{
 
 			recv(comm_socket, recvBuff, sizeof(recvBuff), 0);
-			if (strcmp(recvBuff, "REGISTRAR CLIENTE-END") != 0)
-			{
-				char* nombre;
-				strcpy(nombre, recvBuff);
+			char* nombre;
+			strcpy(nombre, recvBuff);
 
-				recv(comm_socket, recvBuff, sizeof(recvBuff), 0);
-				if (strcmp(recvBuff, "REGISTRAR CLIENTE-END") != 0)
-				{
-					char* email;
-					strcpy(email, recvBuff);
+			recv(comm_socket, recvBuff, sizeof(recvBuff), 0);
+			char* email;
+			strcpy(email, recvBuff);
 
-					recv(comm_socket, recvBuff, sizeof(recvBuff), 0);
-					if (strcmp(recvBuff, "REGISTRAR CLIENTE-END") != 0)
-					{
-						int numTelf = atoi(recvBuff);
+			recv(comm_socket, recvBuff, sizeof(recvBuff), 0);
+			int numTelf = atoi(recvBuff);
 
-						recv(comm_socket, recvBuff, sizeof(recvBuff), 0);
-						if (strcmp(recvBuff, "REGISTRAR CLIENTE-END") != 0)
-						{
-							char* contrasena;
-							strcpy(contrasena, recvBuff);
+			recv(comm_socket, recvBuff, sizeof(recvBuff), 0);
+			char* contrasena;
+			strcpy(contrasena, recvBuff);
 
-							recv(comm_socket, recvBuff, sizeof(recvBuff), 0);
-							int id = atoi(recvBuff);
+			recv(comm_socket, recvBuff, sizeof(recvBuff), 0);
+			int id = atoi(recvBuff);
 
-							// GUARDAR CLIENTE EN LA BD
-							// insertarCliente(id, nombre, email, numTelf, contrasena);
-						}
-					}
-				}
-			}
+			// GUARDAR CLIENTE EN LA BD
+			// insertarCliente(id, nombre, email, numTelf, contrasena);
 		}
 
 
@@ -128,35 +116,24 @@ int main(int argc, char *argv[]) {
 		if (strcmp(recvBuff, "ANADIR RESERVA") == 0)
 		{
 			recv(comm_socket, recvBuff, sizeof(recvBuff), 0);
+			int idCliente = atoi(recvBuff);
 
-			if (strcmp(recvBuff, "ANADIR RESERVA-END") != 0)
-			{
-				int idCliente = atoi(recvBuff);
-				recv(comm_socket, recvBuff, sizeof(recvBuff), 0);
+			recv(comm_socket, recvBuff, sizeof(recvBuff), 0);
+			int idHotel = atoi(recvBuff);
 
-				if (strcmp(recvBuff, "ANADIR RESERVA-END") != 0)
-				{
-					int idHotel = atoi(recvBuff);
-					recv(comm_socket, recvBuff, sizeof(recvBuff), 0);
+			recv(comm_socket, recvBuff, sizeof(recvBuff), 0);
+			int numHabitacion = atoi(recvBuff);
 
-					if (strcmp(recvBuff, "ANADIR RESERVA-END") != 0)
-					{
-						int numHabitacion = atoi(recvBuff);
-						recv(comm_socket, recvBuff, sizeof(recvBuff), 0);
+			// ANADIR LA RESERVA EN LA BD
+			// insertarReserva(idCliente, idHotel, numHabitacion);
 
-						// ANADIR LA RESERVA EN LA BD
-						// insertarReserva(idCliente, idHotel, numHabitacion);
+			// ACTUALIZAR HABITACION
+			recv(comm_socket, recvBuff, sizeof(recvBuff), 0);
+			int ocupantes = atoi(recvBuff);
+			// updateHabitacion(idHotel, numHabitacion, ocupantes);
 
-						// ACTUALIZAR HABITACION
-						recv(comm_socket, recvBuff, sizeof(recvBuff), 0);
-						int ocupantes = atoi(recvBuff);
-						// updateHabitacion(idHotel, numHabitacion, ocupantes);
-
-						// ACTUALIZAR HOTEL
-						// updateHotel(idHotel, +1); // Incrementamos el atributo numHabActuales
-					}
-				}
-			}
+			// ACTUALIZAR HOTEL
+			// updateHotel(idHotel, +1); // Incrementamos el atributo numHabActuales
 		}
 
 
@@ -164,26 +141,22 @@ int main(int argc, char *argv[]) {
 		if (strcmp(recvBuff, "ELIMINAR RESERVA") == 0)
 		{
 			recv(comm_socket, recvBuff, sizeof(recvBuff), 0);
+			int idCliente = atoi(recvBuff);
 
-			if (strcmp(recvBuff, "ELIMINAR RESERVA-END") != 0)
-			{
-				int idCliente = atoi(recvBuff);
-				recv(comm_socket, recvBuff, sizeof(recvBuff), 0);
+			recv(comm_socket, recvBuff, sizeof(recvBuff), 0);
+			int idHotel = atoi(recvBuff);
 
-				if (strcmp(recvBuff, "ELIMINAR RESERVA-END") != 0)
-				{
-					int idHotel = atoi(recvBuff);
+			recv(comm_socket, recvBuff, sizeof(recvBuff), 0);
+			int numHabitacion = atoi(recvBuff);
 
-					// ELIMINAR LA RESERVA DE LA BD
-					// eliminarReserva(idCliente, idHotel, numHabitacion);
+			// ELIMINAR LA RESERVA DE LA BD
+			// eliminarReserva(idCliente, idHotel, numHabitacion);
 
-					// ACTUALIZAR HABITACION
-					// updateHabitacion(idHotel, numHabitacion, 0);
+			// ACTUALIZAR HABITACION
+			// updateHabitacion(idHotel, numHabitacion, 0);
 
-					// ACTUALIZAR HOTEL
-					// updateHotel(idHotel, -1); // Decrementamos el atributo numHabActuales
-				}
-			}
+			// ACTUALIZAR HOTEL
+			// updateHotel(idHotel, -1); // Decrementamos el atributo numHabActuales
 		}
 
 

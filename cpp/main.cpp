@@ -58,7 +58,7 @@ int main(void) {
 
 
 	//////////// SOCKET ////////////
-	/*
+
 	WSADATA wsaData;
 	SOCKET s;
 	struct sockaddr_in server;
@@ -97,7 +97,7 @@ int main(void) {
 	}
 
 	printf("Connection stablished with: %s (%d)\n", inet_ntoa(server.sin_addr), ntohs(server.sin_port));
-	*/
+
 
 	//////////// PROGRAMA PRINCIPAL ////////////
 
@@ -206,6 +206,18 @@ int main(void) {
 				numClientes++;
 				seguir = 0;
 
+				// Mandamos el cliente al socket
+				strcpy(sendBuff, "REGISTRAR CLIENTE");
+				send(s, sendBuff, sizeof(sendBuff), 0);
+				strcpy(sendBuff, usuario);
+				send(s, sendBuff, sizeof(sendBuff), 0);
+				strcpy(sendBuff, email);
+				send(s, sendBuff, sizeof(sendBuff), 0);
+				strcpy(sendBuff, telf + "");
+				send(s, sendBuff, sizeof(sendBuff), 0);
+				strcpy(sendBuff, contrasena);
+				send(s, sendBuff, sizeof(sendBuff), 0);
+
 				break;
 			case 3:
 				return 0;
@@ -299,6 +311,15 @@ int main(void) {
 
 										cout << "\nHabitacion numero " << numHabitacionReserva << " reservada con exito.\n" << endl;
 
+										// Mandamos la reserva al socket
+										strcpy(sendBuff, "ANADIR RESERVA");
+										send(s, sendBuff, sizeof(sendBuff), 0);
+										strcpy(sendBuff, clientes->encontrarCliente(clientes, numClientes, usuario)->getId() + "");
+										send(s, sendBuff, sizeof(sendBuff), 0);
+										strcpy(sendBuff, hotelSeleccionado-1 + "");
+										send(s, sendBuff, sizeof(sendBuff), 0);
+										strcpy(sendBuff, numHabitacionReserva + "");
+										send(s, sendBuff, sizeof(sendBuff), 0);
 
 									}
 									else
@@ -368,10 +389,21 @@ int main(void) {
 								cout<<"Num ocupantes: "<<hoteles[reservas[reservaSeleccionada-1].getHotel()->getId()-1].getHabitaciones()[reservas[reservaSeleccionada-1].getNumHabitacion()-1].getOcupantes()<<endl;
 								reservas[reservaSeleccionada-1].eliminarReserva();
 
+								// Mandamos la reserva al socket
+								strcpy(sendBuff, "ELIMINAR RESERVA");
+								send(s, sendBuff, sizeof(sendBuff), 0);
+								strcpy(sendBuff, clientes->encontrarCliente(clientes, numClientes, usuario)->getId() + "");
+								send(s, sendBuff, sizeof(sendBuff), 0);
+								strcpy(sendBuff, reservas[reservaSeleccionada-1].getHotel()->getId() + "");
+								send(s, sendBuff, sizeof(sendBuff), 0);
+								strcpy(sendBuff, reservas[reservaSeleccionada-1].getNumHabitacion() + "");
+								send(s, sendBuff, sizeof(sendBuff), 0);
+
 								for (int i = reservaSeleccionada-1; i < numReservas-1; i++) {
 									reservas[i]=reservas[i+1];
 								}
 								numReservas--;
+
 							}else{
 								cout << "\nLa reserva no existe."<<endl;
 							}
