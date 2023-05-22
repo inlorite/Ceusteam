@@ -49,13 +49,6 @@ int main(void) {
 	cout << "Programa hecho en cpp" << endl;
 
 	FILE* f;
-	sqlite3 *db;
-	sqlite3_stmt *stmt;
-
-	//sqlite3_open("../c/hoteles.sqlite", &db);
-
-	//crearTablas(db, stmt, f);
-
 
 	//////////// SOCKET ////////////
 
@@ -98,23 +91,14 @@ int main(void) {
 
 	printf("Connection stablished with: %s (%d)\n", inet_ntoa(server.sin_addr), ntohs(server.sin_port));
 
-
-	//////////// PROGRAMA PRINCIPAL ////////////
-
-	cout << "\n ======================================\n "
-			   "\t RESERVA DE HOTELES\n "
-			   "======================================\n" << endl;
-
-
-	int seguir = 1;
-	int seguir3 = 1;
-	int iniciarSesion = 0;
+	//////////// CARGAR DATOS ////////////
 
 	/* CARGA DE DATOS DESDE LA BD */
 
 	int numHoteles = 0;
 	int numClientes = 0;
 	int numReservas = 0;
+	int numTipoHabs = 0;
 	int contadorReservas =0;
 	int reservaSeleccionada;
 
@@ -123,11 +107,7 @@ int main(void) {
 	TipoHab *tiposHabitacion = new TipoHab[3];
 	Reserva* reservas = new Reserva[50];
 
-	char* usuario = new char[20];
-	char* contrasena = new char[20];
-	int telf = 0;
-	char* email = new char[50];
-
+	/*
 	TipoHab tipo1(1,"Presencial",200);
 	tiposHabitacion[0]=tipo1;
 	Cliente c(1, "test", "test@gmail.com", 111111111, "test");
@@ -141,8 +121,145 @@ int main(void) {
 	numHoteles++;
 	clientes[0] = c;
 	numClientes++;
+	*/
+
+	strcpy(sendBuff, "CARGAR DATOS");
+	send(s, sendBuff, sizeof(sendBuff), 0);
 
 
+	// RECIBIR TIPOS HABITACIONES
+
+	recv(s, recvBuff, sizeof(recvBuff), 0);
+	numTipoHabs = atoi(recvBuff);
+
+	for (int i = 0; i < numTipoHabs; ++i) {
+		recv(s, recvBuff, sizeof(recvBuff), 0);
+		int id = atoi(recvBuff);
+
+		recv(s, recvBuff, sizeof(recvBuff), 0);
+		char* tipo = new char[strlen(recvBuff)+1];
+		strcpy(tipo, recvBuff);
+
+		recv(s, recvBuff, sizeof(recvBuff), 0);
+		float precio = atof(recvBuff);
+
+		TipoHab tipoHab(id, tipo, precio);
+		tiposHabitacion[i] = tipoHab;
+	}
+
+	// RECIBIR HOTELES
+
+	recv(s, recvBuff, sizeof(recvBuff), 0);
+	numHoteles = atoi(recvBuff);
+
+	for (int i = 0; i < numHoteles; ++i) {
+		recv(s, recvBuff, sizeof(recvBuff), 0);
+		int id = atoi(recvBuff);
+
+		recv(s, recvBuff, sizeof(recvBuff), 0);
+		char* nombre = new char[strlen(recvBuff)+1];
+		strcpy(nombre, recvBuff);
+
+		recv(s, recvBuff, sizeof(recvBuff), 0);
+		char* localizacion = new char[strlen(recvBuff)+1];
+		strcpy(localizacion, recvBuff);
+
+		recv(s, recvBuff, sizeof(recvBuff), 0);
+		int numHabTotales = atoi(recvBuff);
+
+		recv(s, recvBuff, sizeof(recvBuff), 0);
+		int numHabActuales = atoi(recvBuff);
+
+		Habitacion* habitaciones = new Habitacion[numHabTotales];
+
+		for (int j = 0; j < numHabTotales; ++j) {
+			recv(s, recvBuff, sizeof(recvBuff), 0);
+			int id = atoi(recvBuff);
+
+			recv(s, recvBuff, sizeof(recvBuff), 0);
+			int tipo = atoi(recvBuff);
+
+			recv(s, recvBuff, sizeof(recvBuff), 0);
+			int ocupantes = atoi(recvBuff);
+
+			Habitacion habitacion(id, &tiposHabitacion[tipo-1], ocupantes);
+			habitaciones[j] =  habitacion;
+		}
+
+		Hotel hotel(id, nombre, localizacion, numHabTotales, numHabActuales, habitaciones);
+		hoteles[i] = hotel;
+	}
+
+	// RECIBIR CLIENTES
+
+	recv(s, recvBuff, sizeof(recvBuff), 0);
+	numClientes = atoi(recvBuff);
+
+	for (int i = 0; i < numClientes; ++i) {
+		recv(s, recvBuff, sizeof(recvBuff), 0);
+		int id = atoi(recvBuff);
+
+		recv(s, recvBuff, sizeof(recvBuff), 0);
+		char* nombre = new char[strlen(recvBuff)+1];
+		strcpy(nombre, recvBuff);
+
+		recv(s, recvBuff, sizeof(recvBuff), 0);
+		char* email = new char[strlen(recvBuff)+1];
+		strcpy(email, recvBuff);
+
+		recv(s, recvBuff, sizeof(recvBuff), 0);
+		int numTelf = atoi(recvBuff);
+
+		recv(s, recvBuff, sizeof(recvBuff), 0);
+		char* contrasena = new char[strlen(recvBuff)+1];
+		strcpy(contrasena, recvBuff);
+
+		Cliente cliente(id, nombre, email, numTelf, contrasena);
+		clientes[i] = cliente;
+	}
+
+	// RECIBIR RESERVAS
+
+	recv(s, recvBuff, sizeof(recvBuff), 0);
+	numReservas = atoi(recvBuff);
+
+	for (int i = 0; i < numReservas; ++i) {
+		recv(s, recvBuff, sizeof(recvBuff), 0);
+		int idCliente = atoi(recvBuff);
+
+		recv(s, recvBuff, sizeof(recvBuff), 0);
+		int idHotel = atoi(recvBuff);
+		Hotel* hotel;
+
+		for (int j = 0; j < numHoteles; ++j) {
+			if (idHotel == hoteles[j].getId()) {
+				hotel = &hoteles[j];
+				break;
+			}
+		}
+
+		recv(s, recvBuff, sizeof(recvBuff), 0);
+		int numHabitacion = atoi(recvBuff);
+
+		Reserva reserva(&clientes[idCliente-1], hotel, numHabitacion);
+		reservas[i] = reserva;
+	}
+
+	//////////// PROGRAMA PRINCIPAL ////////////
+
+	cout << "\n ======================================\n "
+			   "\t RESERVA DE HOTELES\n "
+			   "======================================\n" << endl;
+
+
+	char* usuario = new char[20];
+	char* contrasena = new char[20];
+	int telf = 0;
+	char* email = new char[50];
+
+	int seguir = 1;
+	int seguir3 = 1;
+	int iniciarSesion = 0;
 
 	while (seguir == 1)
 	{
@@ -305,7 +422,7 @@ int main(void) {
 										hoteles[hotelSeleccionado-1].getHabitaciones()[numHabitacionReserva-1].setOcupantes(ocupantes);
 
 										cout<<"Num ocupantes: "<<hoteles[hotelSeleccionado-1].getHabitaciones()[0].getOcupantes();
-										cout<<"Num ocupantes: "<<habitaciones[1].getOcupantes();
+										//cout<<"Num ocupantes: "<<habitaciones[1].getOcupantes();
 
 										hoteles[hotelSeleccionado-1].setNumHabActuales(hoteles[hotelSeleccionado-1].getNumHabActuales()+1);
 

@@ -645,3 +645,50 @@ void cargarEmpleados(sqlite3* db, sqlite3_stmt* stmt, Empleado* empleados, int* 
 
 	return;
 }
+
+void insertarCliente(sqlite3* db, sqlite3_stmt* stmt, int id, char* nombre, char* email, int numTelf, char* contrasena, FILE* f) {
+	int result;
+	char insertClientes[] = "INSERT INTO CLIENTES(ID, NOMBRE, EMAIL, NUM_TELF, CONTRASENA) VALUES (? ,?, ?, ?, ?);";
+
+	sqlite3_prepare_v2(db, insertClientes, strlen(insertClientes) + 1, &stmt, NULL) ;
+	sqlite3_bind_int(stmt, 1, id);
+	sqlite3_bind_text(stmt, 2, nombre, strlen(nombre), SQLITE_STATIC);
+	sqlite3_bind_text(stmt, 3, email, strlen(email), SQLITE_STATIC);
+	sqlite3_bind_int(stmt, 4, numTelf);
+	sqlite3_bind_text(stmt, 5, contrasena, strlen(contrasena), SQLITE_STATIC);
+
+	result = sqlite3_step(stmt);
+	if (result != SQLITE_DONE) {
+		fprintf(f, "ERROR: No se pudo insertar el cliente en la tabla de CLIENTES.\n");
+	}else{
+		fprintf(f, "OK: Cliente insertado correctamente en la tabla de CLIENTES.\n");
+	}
+
+	sqlite3_finalize(stmt);
+}
+
+void insertarReserva(sqlite3* db, sqlite3_stmt* stmt, int idCliente, int idHotel, int numHabitacion, FILE* f) {
+	int result;
+	char insertReservas[] = "INSERT INTO RESERVAS(ID, ID_CLIENTE, ID_HOTEL, ID_HABITACION) VALUES (?, ?, ?, ?);";
+
+	sqlite3_prepare_v2(db, insertReservas, strlen(insertReservas) + 1, &stmt, NULL) ;
+	sqlite3_bind_int(stmt, 1, 0);
+	sqlite3_bind_int(stmt, 2, idCliente);
+	sqlite3_bind_int(stmt, 3, idHotel);
+	sqlite3_bind_int(stmt, 4, numHabitacion);
+
+	result = sqlite3_step(stmt);
+	if (result != SQLITE_DONE) {
+		fprintf(f, "ERROR: No se pudo insertar la reserva en la tabla de RESERVAS.\n");
+	}else{
+		fprintf(f, "OK: Reserva insertada correctamente en la tabla de RESERVAS.\n");
+	}
+
+	sqlite3_finalize(stmt);
+}
+
+void eliminarReserva(sqlite3* db, sqlite3_stmt* stmt, int idCliente, int idHotel, int numHabitacion, FILE* f);
+
+void updateHabitacion(sqlite3* db, sqlite3_stmt* stmt, int idHotel, int numHabitacion, int ocupantes, FILE* f);
+
+void updateHotel(sqlite3* db, sqlite3_stmt* stmt, int idHotel, int incNumHabActuales, FILE* f);

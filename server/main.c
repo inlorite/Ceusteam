@@ -3,14 +3,39 @@
 #include <stdio.h>
 #include <winsock2.h>
 #include <math.h>
+#include <float.h>
 
 #include "../c/objects/cliente.h"
 #include "../c/objects/hotel.h"
+#include "data/sqlite3.h"
+#include "data/sql.h"
 
 #define SERVER_IP "127.0.0.1"
 #define SERVER_PORT 6000
 
 int main(int argc, char *argv[]) {
+
+	FILE* f;
+	sqlite3 *db;
+	sqlite3_stmt *stmt;
+	f = fopen("../../c/logs.txt", "a");
+	sqlite3_open("../../c/hoteles.sqlite", &db);
+
+	Hotel* hoteles = malloc(sizeof(Hotel) * 50);
+	Cliente* clientes = malloc(sizeof(Cliente) * 30);
+	TipoHab* tiposHabitacion = malloc(sizeof(TipoHab)*3);
+	Reserva* reservas = malloc(sizeof(Reserva) * 50);
+
+	int idHotel = 0;
+	int numClientes = 0;
+	int numReservas = 0;
+	int numTipoHabs = 0;
+
+	cargarTiposHabitaciones(db, stmt, tiposHabitacion, &numTipoHabs, f);
+	cargarHoteles(db, stmt, hoteles, &idHotel, tiposHabitacion, f);
+	cargarHabitacionesHoteles(db, stmt, tiposHabitacion, hoteles, idHotel, f);
+	cargarClientes(db, stmt, clientes, &numClientes, f);
+	cargarReservas(db, stmt, reservas, &numReservas, clientes, hoteles, f);
 
 	WSADATA wsaData;
 	SOCKET conn_socket;
@@ -157,6 +182,93 @@ int main(int argc, char *argv[]) {
 
 			// ACTUALIZAR HOTEL
 			// updateHotel(idHotel, -1); // Decrementamos el atributo numHabActuales
+		}
+
+		// CARGAR DATOS
+		if (strcmp(recvBuff, "CARGAR DATOS") == 0)
+		{
+			// Enviar tipos habitaciones
+			strcpy(sendBuff, numTipoHabs);
+			send(comm_socket, sendBuff, sizeof(sendBuff), 0);
+
+			for (int i = 0; i < numTipoHabs; ++i) {
+				strcpy(sendBuff, tiposHabitacion[i].id);
+				send(comm_socket, sendBuff, sizeof(sendBuff), 0);
+
+				strcpy(sendBuff, tiposHabitacion[i].tipo);
+				send(comm_socket, sendBuff, sizeof(sendBuff), 0);
+
+				sprintf(sendBuff, "%f", tiposHabitacion[i].precio);
+				send(comm_socket, sendBuff, sizeof(sendBuff), 0);
+			}
+
+			// Enviar hoteles
+			strcpy(sendBuff, idHotel);
+			send(comm_socket, sendBuff, sizeof(sendBuff), 0);
+
+			for (int i = 0; i < idHotel; ++i) {
+				strcpy(sendBuff, hoteles[i].id);
+				send(comm_socket, sendBuff, sizeof(sendBuff), 0);
+
+				strcpy(sendBuff, hoteles[i].nombre);
+				send(comm_socket, sendBuff, sizeof(sendBuff), 0);
+
+				strcpy(sendBuff, hoteles[i].localizacion);
+				send(comm_socket, sendBuff, sizeof(sendBuff), 0);
+
+				strcpy(sendBuff, hoteles[i].numHabTotales);
+				send(comm_socket, sendBuff, sizeof(sendBuff), 0);
+
+				strcpy(sendBuff, hoteles[i].numHabActuales);
+				send(comm_socket, sendBuff, sizeof(sendBuff), 0);
+
+				for (int j = 0; j < hoteles[i].numHabTotales; ++j) {
+					strcpy(sendBuff, hoteles[i].habitaciones->num_habitacion);
+					send(comm_socket, sendBuff, sizeof(sendBuff), 0);
+
+					strcpy(sendBuff, hoteles[i].habitaciones->tipoHab.id);
+					send(comm_socket, sendBuff, sizeof(sendBuff), 0);
+
+					strcpy(sendBuff, hoteles[i].habitaciones->ocupantes);
+					send(comm_socket, sendBuff, sizeof(sendBuff), 0);
+				}
+			}
+
+			// Enviar clientes
+			strcpy(sendBuff, numClientes);
+			send(comm_socket, sendBuff, sizeof(sendBuff), 0);
+
+			for (int i = 0; i < numClientes; ++i) {
+				strcpy(sendBuff, clientes[i].id);
+				send(comm_socket, sendBuff, sizeof(sendBuff), 0);
+
+				strcpy(sendBuff, clientes[i].nombre);
+				send(comm_socket, sendBuff, sizeof(sendBuff), 0);
+
+				strcpy(sendBuff, clientes[i].email);
+				send(comm_socket, sendBuff, sizeof(sendBuff), 0);
+
+				strcpy(sendBuff, clientes[i].numTelf);
+				send(comm_socket, sendBuff, sizeof(sendBuff), 0);
+
+				strcpy(sendBuff, clientes[i].contrasena);
+				send(comm_socket, sendBuff, sizeof(sendBuff), 0);
+			}
+
+			// Enviar reservas
+			strcpy(sendBuff, numReservas);
+			send(comm_socket, sendBuff, sizeof(sendBuff), 0);
+
+			for (int i = 0; i < numReservas; ++i) {
+				strcpy(sendBuff, reservas[i].cliente->id);
+				send(comm_socket, sendBuff, sizeof(sendBuff), 0);
+
+				strcpy(sendBuff, reservas[i].hotel->id);
+				send(comm_socket, sendBuff, sizeof(sendBuff), 0);
+
+				strcpy(sendBuff, reservas[i].numHabitacion);
+				send(comm_socket, sendBuff, sizeof(sendBuff), 0);
+			}
 		}
 
 
