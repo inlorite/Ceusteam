@@ -37,18 +37,21 @@ int main(int argc, char *argv[]) {
 	cargarClientes(db, stmt, clientes, &numClientes, f);
 	cargarReservas(db, stmt, reservas, &numReservas, clientes, hoteles, f);
 
-	printf("%d\n", idHotel);
+	printf("numidhotel: %d\n", idHotel);
 	printf("hotel: %d - %s\n", hoteles[0].id, hoteles[0].nombre);
 
-	printf("%d\n", numClientes);
+	printf("numclientes: %d\n", numClientes);
 	printf("cliente: %d - %s\n", clientes[0].id, clientes[0].nombre);
+
+	printf("numreservas: %d\n", numReservas);
+	printf("reserva0: %s - %s - %d\n", reservas[0].cliente->nombre, reservas[0].hotel->nombre, reservas[0].numHabitacion);
 
 	WSADATA wsaData;
 	SOCKET conn_socket;
 	SOCKET comm_socket;
 	struct sockaddr_in server;
 	struct sockaddr_in client;
-	char sendBuff[512], recvBuff[512];
+	char sendBuff[50], recvBuff[50];
 
 	printf("\nInitialising Winsock...\n");
 	if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {
@@ -139,7 +142,7 @@ int main(int argc, char *argv[]) {
 			int id = atoi(recvBuff);
 
 			// GUARDAR CLIENTE EN LA BD
-			// insertarCliente(id, nombre, email, numTelf, contrasena);
+			insertarCliente(db, stmt, id, nombre, email, numTelf, contrasena, f);
 		}
 
 
@@ -156,15 +159,15 @@ int main(int argc, char *argv[]) {
 			int numHabitacion = atoi(recvBuff);
 
 			// ANADIR LA RESERVA EN LA BD
-			// insertarReserva(idCliente, idHotel, numHabitacion);
+			insertarReserva(db, stmt, idCliente, idHotel, numHabitacion, f);
 
 			// ACTUALIZAR HABITACION
 			recv(comm_socket, recvBuff, sizeof(recvBuff), 0);
 			int ocupantes = atoi(recvBuff);
-			// updateHabitacion(idHotel, numHabitacion, ocupantes);
+			updateHabitacion(db, stmt, idHotel, numHabitacion, ocupantes, f);
 
 			// ACTUALIZAR HOTEL
-			// updateHotel(idHotel, +1); // Incrementamos el atributo numHabActuales
+			updateHotel(db, stmt, idHotel, hoteles[idHotel-1].numHabActuales, 1, f); // Incrementamos el atributo numHabActuales
 		}
 
 
@@ -181,13 +184,13 @@ int main(int argc, char *argv[]) {
 			int numHabitacion = atoi(recvBuff);
 
 			// ELIMINAR LA RESERVA DE LA BD
-			// eliminarReserva(idCliente, idHotel, numHabitacion);
+			eliminarReserva(db, stmt, idCliente, idHotel, numHabitacion, f);
 
 			// ACTUALIZAR HABITACION
-			// updateHabitacion(idHotel, numHabitacion, 0);
+			updateHabitacion(db, stmt, idHotel, numHabitacion, 0, f);
 
 			// ACTUALIZAR HOTEL
-			// updateHotel(idHotel, -1); // Decrementamos el atributo numHabActuales
+			updateHotel(db, stmt, idHotel, hoteles[idHotel-1].numHabActuales, -1, f); // Decrementamos el atributo numHabActuales
 		}
 
 		// CARGAR DATOS
@@ -236,13 +239,13 @@ int main(int argc, char *argv[]) {
 				send(comm_socket, sendBuff, sizeof(sendBuff), 0);
 
 				for (int j = 0; j < hoteles[i].numHabTotales; ++j) {
-					sprintf(sendBuff, "%d", hoteles[i].habitaciones->num_habitacion);
+					sprintf(sendBuff, "%d", hoteles[i].habitaciones[j].num_habitacion);
 					send(comm_socket, sendBuff, sizeof(sendBuff), 0);
 
-					sprintf(sendBuff, "%d", hoteles[i].habitaciones->tipoHab.id);
+					sprintf(sendBuff, "%d", hoteles[i].habitaciones[j].tipoHab.id);
 					send(comm_socket, sendBuff, sizeof(sendBuff), 0);
 
-					sprintf(sendBuff, "%d", hoteles[i].habitaciones->ocupantes);
+					sprintf(sendBuff, "%d", hoteles[i].habitaciones[j].ocupantes);
 					send(comm_socket, sendBuff, sizeof(sendBuff), 0);
 				}
 			}
@@ -292,6 +295,13 @@ int main(int argc, char *argv[]) {
 			break;
 
 	} while (1);
+
+	/*
+	borrarTablas(db, stmt, f);
+	crearTablas(db, stmt, f);
+
+	guardarDatos(db, stmt, hoteles, idHotel, tiposHabitacion, numTipoHabs, clientes, numClientes, reservas, numReservas, f);
+	*/
 
 	// CLOSING the sockets and cleaning Winsock...
 	closesocket(comm_socket);

@@ -30,11 +30,9 @@ Hotel::Hotel(int id, char* nombre, char* localizacion, int numHabTotales, int nu
 }
 
 Hotel::~Hotel() {
-	/*
-	delete [] nombre;
-	delete [] localizacion;
-	delete [] habitaciones;
-	*/
+//	delete [] nombre;
+//	delete [] localizacion;
+//	delete [] habitaciones;
 }
 
 Hotel::Hotel(const Hotel &other) {

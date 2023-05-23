@@ -21,8 +21,10 @@ int main(void)
 	fprintf(f, "\n-+- Nueva ejecucion del programa -+-\n");
 	sqlite3_open("../hoteles.sqlite", &db);
 
-	//borrarTablas(db, stmt, f);
-	//crearTablas(db, stmt, f);
+	borrarTablas(db, stmt, f);
+	borrarTablasAdmin(db, stmt, f);
+	crearTablas(db, stmt, f);
+	crearTablasAdmin(db, stmt, f);
 
 	Hotel* hoteles = malloc(sizeof(Hotel) * 50);
 	Cliente* clientes = malloc(sizeof(Cliente) * 30);
@@ -41,13 +43,15 @@ int main(void)
 	int seguir;
 	seguir = 1;
 
-	/*
 	TipoHab th1 = {1, "Presidencial", 300};
 	tiposHabitacion[0] = th1;
+	numTipoHabs++;
 	TipoHab th2 = {2, "Suite", 150};
 	tiposHabitacion[1] = th2;
+	numTipoHabs++;
 	TipoHab th3 = {3, "Estandar", 75};
 	tiposHabitacion[2] = th3;
+	numTipoHabs++;
 
 	Admin a = {1, "test", "test"};
 	admins[0] = a;
@@ -60,15 +64,28 @@ int main(void)
 	Habitacion* habitaciones = malloc(sizeof(Habitacion) * 2);
 	int numHabitaciones = 0;
 
-	Habitacion hab1 = {1, tiposHabitacion[0], 15};
+	Habitacion hab1 = {1, tiposHabitacion[0], 2};
 	habitaciones[0] = hab1;
 	numHabitaciones++;
-	Habitacion hab2 = {2, tiposHabitacion[1], 46};
+	Habitacion hab2 = {2, tiposHabitacion[1], 0};
 	habitaciones[1] = hab2;
 	numHabitaciones++;
 
 	Hotel h = {1, "hotel1", "bilbao", numHabitaciones, numHabitaciones, habitaciones};
 	hoteles[0] = h;
+	idHotel++;
+
+	Habitacion* habitaciones2 = malloc(sizeof(Habitacion) * 4);
+	habitaciones2[0] = hab1;
+	habitaciones2[1] = hab2;
+
+	Habitacion hab3 = {3, tiposHabitacion[2], 0};
+	habitaciones2[2] = hab3;
+	Habitacion hab4 = {4, tiposHabitacion[1], 0};
+	habitaciones2[3] = hab4;
+
+	Hotel h2 = {2, "hotel2", "madrid", 4, 2, habitaciones2};
+	hoteles[1] = h2;
 	idHotel++;
 
 	Empleado e = {1, "fran", &hoteles[0]};
@@ -79,9 +96,14 @@ int main(void)
 	reservas[0] = r;
 	numReservas++;
 
-	guardarDatos(db, stmt, hoteles, idHotel, tiposHabitacion, numTipoHabs, empleados, numEmpleados, clientes, numClientes, reservas, numReservas, admins, numAdmins, f);
-	*/
+	Reserva r2 = {&clientes[0], &hoteles[1], 1};
+	reservas[1] = r2;
+	numReservas++;
 
+	guardarDatos(db, stmt, hoteles, idHotel, tiposHabitacion, numTipoHabs, clientes, numClientes, reservas, numReservas, f);
+	guardarDatosAdmin(db, stmt, empleados, numEmpleados, admins, numAdmins, f);
+
+	/*
 	cargarTiposHabitaciones(db, stmt, tiposHabitacion, &numTipoHabs, f);
 	cargarHoteles(db, stmt, hoteles, &idHotel, tiposHabitacion, f);
 	cargarHabitacionesHoteles(db, stmt, tiposHabitacion, hoteles, idHotel, f);
@@ -89,6 +111,7 @@ int main(void)
 	cargarReservas(db, stmt, reservas, &numReservas, clientes, hoteles, f);
 	cargarAdmins(db, stmt, admins, &numAdmins, f);
 	cargarEmpleados(db, stmt, empleados, &numEmpleados, hoteles, f);
+	*/
 
 	printf("%d\n", numAdmins);
 	printf("admin: %s - %s\n", admins[0].nombre, admins[0].contrasena);
@@ -269,10 +292,15 @@ int main(void)
 		printf("\nEl usuario o la contrasena son incorrectos.");
 	}
 
+	/*
 	borrarTablas(db, stmt, f);
+	borrarTablasAdmin(db, stmt, f);
 	crearTablas(db, stmt, f);
+	crearTablasAdmin(db, stmt, f);
 
-	guardarDatos(db, stmt, hoteles, idHotel, tiposHabitacion, numTipoHabs, empleados, numEmpleados, clientes, numClientes, reservas, numReservas, admins, numAdmins, f);
+	guardarDatos(db, stmt, hoteles, idHotel, tiposHabitacion, numTipoHabs, clientes, numClientes, reservas, numReservas, f);
+	guardarDatosAdmin(db, stmt, empleados, numEmpleados, admins, numAdmins, f);
+	*/
 
 	sqlite3_close(db);
 	fclose(f);

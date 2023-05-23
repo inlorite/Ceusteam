@@ -9,9 +9,15 @@
 
 void crearTablas(sqlite3* db, sqlite3_stmt* stmt, FILE* f);
 
+void crearTablasAdmin(sqlite3* db, sqlite3_stmt* stmt, FILE* f);
+
 void borrarTablas(sqlite3* db, sqlite3_stmt* stmt, FILE* f);
 
-void guardarDatos(sqlite3* db, sqlite3_stmt* stmt, Hotel* hoteles, int numHoteles, TipoHab* tiposHabitaciones, int numTiposHabitaciones, Empleado* empleados, int numEmpleados, Cliente* clientes, int numClientes, Reserva* reservas, int numReservas, Admin* admins, int numAdmins, FILE* f);
+void borrarTablasAdmin(sqlite3* db, sqlite3_stmt* stmt, FILE* f);
+
+void guardarDatos(sqlite3* db, sqlite3_stmt* stmt, Hotel* hoteles, int numHoteles, TipoHab* tiposHabitaciones, int numTiposHabitaciones, Cliente* clientes, int numClientes, Reserva* reservas, int numReservas, FILE* f);
+
+void guardarDatosAdmin(sqlite3* db, sqlite3_stmt* stmt, Empleado* empleados, int numEmpleados, Admin* admins, int numAdmins, FILE* f);
 
 void cargarTiposHabitaciones(sqlite3* db, sqlite3_stmt* stmt, TipoHab* tiposHabitaciones, int* numTiposHabitaciones, FILE* f);
 
@@ -35,6 +41,6 @@ void eliminarReserva(sqlite3* db, sqlite3_stmt* stmt, int idCliente, int idHotel
 
 void updateHabitacion(sqlite3* db, sqlite3_stmt* stmt, int idHotel, int numHabitacion, int ocupantes, FILE* f);
 
-void updateHotel(sqlite3* db, sqlite3_stmt* stmt, int idHotel, int incNumHabActuales, FILE* f);
+void updateHotel(sqlite3* db, sqlite3_stmt* stmt, int idHotel, int numHabActuales, int incNumHabActuales, FILE* f);
 
 #endif

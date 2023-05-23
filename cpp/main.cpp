@@ -55,7 +55,7 @@ int main(void) {
 	WSADATA wsaData;
 	SOCKET s;
 	struct sockaddr_in server;
-	char sendBuff[512], recvBuff[512];
+	char sendBuff[50], recvBuff[50];
 
 	printf("\nInitialising Winsock...\n");
 	if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0)
@@ -145,7 +145,7 @@ int main(void) {
 
 		TipoHab tipoHab(id, tipo, precio);
 		cout << "tipohab: " << tipoHab.getId() << " " << tipoHab.getTipo() << " " << tipoHab.getPrecio() << endl;
-		tiposHabitacion[i] = tipoHab;
+		tiposHabitacion[i] = TipoHab(tipoHab);
 		cout << "tipohabARRAY: " << tiposHabitacion[i].getId() << " " << tiposHabitacion[i].getTipo() << " " << tiposHabitacion[i].getPrecio() << endl;
 	}
 
@@ -259,6 +259,8 @@ int main(void) {
 		cout << tiposHabitacion[i].getId() << " " << tiposHabitacion[i].getTipo() << endl;
 	}
 
+	cout << "habitacion 2 hotel 2: numHab: " << hoteles[1].getHabitaciones()[1].getNumHabitacion() << " tipohab: " << hoteles[1].getHabitaciones()[1].getTipoHab()->getTipo() << endl;
+
 	cout << "\n ======================================\n "
 			   "\t RESERVA DE HOTELES\n "
 			   "======================================\n" << endl;
@@ -342,7 +344,7 @@ int main(void) {
 				send(s, sendBuff, sizeof(sendBuff), 0);
 				strcpy(sendBuff, email);
 				send(s, sendBuff, sizeof(sendBuff), 0);
-				strcpy(sendBuff, telf + "");
+				sprintf(sendBuff, "%d", telf);
 				send(s, sendBuff, sizeof(sendBuff), 0);
 				strcpy(sendBuff, contrasena);
 				send(s, sendBuff, sizeof(sendBuff), 0);
@@ -425,15 +427,23 @@ int main(void) {
 											}
 										}
 
-										Reserva* nuevaReserva = new Reserva(clientes->encontrarCliente(clientes, numClientes, usuario), &hoteles[hotelSeleccionado-1], numHabitacionReserva);
+										Reserva nuevaReserva(clientes->encontrarCliente(clientes, numClientes, usuario), &hoteles[hotelSeleccionado-1], numHabitacionReserva);
 
-										reservas[numReservas] = *nuevaReserva;
+										cout << "despues de crear reserva" << endl;
+
+										reservas[numReservas] = nuevaReserva;
+
+										cout << "despues de asignar puntero" << endl;
 
 										numReservas++;
 
+										cout << "MEMATO" << endl;
+
 										hoteles[hotelSeleccionado-1].getHabitaciones()[numHabitacionReserva-1].setOcupantes(ocupantes);
 
-										cout<<"Num ocupantes: "<<hoteles[hotelSeleccionado-1].getHabitaciones()[0].getOcupantes();
+										cout << "despues de set ocupantes" << endl;
+
+										//cout<<"Num ocupantes: "<<hoteles[hotelSeleccionado-1].getHabitaciones()[0].getOcupantes();
 										//cout<<"Num ocupantes: "<<habitaciones[1].getOcupantes();
 
 										hoteles[hotelSeleccionado-1].setNumHabActuales(hoteles[hotelSeleccionado-1].getNumHabActuales()+1);
@@ -443,11 +453,11 @@ int main(void) {
 										// Mandamos la reserva al socket
 										strcpy(sendBuff, "ANADIR RESERVA");
 										send(s, sendBuff, sizeof(sendBuff), 0);
-										strcpy(sendBuff, clientes->encontrarCliente(clientes, numClientes, usuario)->getId() + "");
+										sprintf(sendBuff, "%d", clientes->encontrarCliente(clientes, numClientes, usuario)->getId());
 										send(s, sendBuff, sizeof(sendBuff), 0);
-										strcpy(sendBuff, hotelSeleccionado-1 + "");
+										sprintf(sendBuff, "%d", hotelSeleccionado);
 										send(s, sendBuff, sizeof(sendBuff), 0);
-										strcpy(sendBuff, numHabitacionReserva + "");
+										sprintf(sendBuff, "%d", numHabitacionReserva);
 										send(s, sendBuff, sizeof(sendBuff), 0);
 
 									}
@@ -516,17 +526,18 @@ int main(void) {
 								hoteles[reservas[reservaSeleccionada-1].getHotel()->getId()-1].getHabitaciones()[reservas[reservaSeleccionada-1].getNumHabitacion()-1].setOcupantes(0);
 								hoteles[reservas[reservaSeleccionada-1].getHotel()->getId()-1].setNumHabActuales(hoteles[reservas[reservaSeleccionada-1].getHotel()->getId()-1].getNumHabActuales()-1);
 								cout<<"Num ocupantes: "<<hoteles[reservas[reservaSeleccionada-1].getHotel()->getId()-1].getHabitaciones()[reservas[reservaSeleccionada-1].getNumHabitacion()-1].getOcupantes()<<endl;
-								reservas[reservaSeleccionada-1].eliminarReserva();
 
 								// Mandamos la reserva al socket
 								strcpy(sendBuff, "ELIMINAR RESERVA");
 								send(s, sendBuff, sizeof(sendBuff), 0);
-								strcpy(sendBuff, clientes->encontrarCliente(clientes, numClientes, usuario)->getId() + "");
+								sprintf(sendBuff, "%d", clientes->encontrarCliente(clientes, numClientes, usuario)->getId());
 								send(s, sendBuff, sizeof(sendBuff), 0);
-								strcpy(sendBuff, reservas[reservaSeleccionada-1].getHotel()->getId() + "");
+								sprintf(sendBuff, "%d", reservas[reservaSeleccionada-1].getHotel()->getId());
 								send(s, sendBuff, sizeof(sendBuff), 0);
-								strcpy(sendBuff, reservas[reservaSeleccionada-1].getNumHabitacion() + "");
+								sprintf(sendBuff, "%d", reservas[reservaSeleccionada-1].getNumHabitacion());
 								send(s, sendBuff, sizeof(sendBuff), 0);
+
+								reservas[reservaSeleccionada-1].eliminarReserva();
 
 								for (int i = reservaSeleccionada-1; i < numReservas-1; i++) {
 									reservas[i]=reservas[i+1];
