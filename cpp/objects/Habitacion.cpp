@@ -55,7 +55,7 @@ void Habitacion::setOcupantes(int ocupantes)
 
 void Habitacion::imprimirHabitacion()
 {
-	char* estado;
+	char* estado = new char [10];
 	strcpy(estado, "OCUPADA");
 	if (this->estaLibre())
 		strcpy(estado, "LIBRE");

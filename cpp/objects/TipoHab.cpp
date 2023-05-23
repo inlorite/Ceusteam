@@ -16,7 +16,7 @@ TipoHab::TipoHab(int id, char* tipo, float precio) {
 }
 
 TipoHab::~TipoHab() {
-	delete [] tipo;
+	//delete [] tipo;
 }
 
 TipoHab::TipoHab(const TipoHab &other) {

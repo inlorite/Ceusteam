@@ -30,19 +30,23 @@ Hotel::Hotel(int id, char* nombre, char* localizacion, int numHabTotales, int nu
 }
 
 Hotel::~Hotel() {
+	/*
 	delete [] nombre;
 	delete [] localizacion;
 	delete [] habitaciones;
+	*/
 }
 
 Hotel::Hotel(const Hotel &other) {
-	id = other.id;
-	nombre = other.nombre;
-	localizacion = other.localizacion;
-	numHabTotales = other.numHabTotales;
-	numHabActuales = other.numHabActuales;
+	this->id = other.id;
+	this->nombre = new char[strlen(other.nombre)+1];
+	strcpy(this->nombre, other.nombre);
+	this->localizacion = new char[strlen(other.localizacion)+1];
+	strcpy(this->localizacion, other.localizacion);
+	this->numHabTotales = numHabTotales;
+	this->numHabActuales = numHabActuales;
 
-	habitaciones = new Habitacion[other.numHabTotales];
+	this->habitaciones = new Habitacion[other.numHabTotales];
 	for (int i = 0; i < other.numHabTotales; ++i) {
 		this->habitaciones[i] = other.habitaciones[i];
 	}

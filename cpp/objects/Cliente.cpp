@@ -22,7 +22,9 @@ Cliente::Cliente(int id, char* nombre, char* email, int numTelf, char* contrasen
 }
 
 Cliente::~Cliente() {
-
+//	delete [] nombre;
+//	delete [] email;
+//	delete [] contrasena;
 }
 
 Cliente::Cliente(const Cliente &other) {

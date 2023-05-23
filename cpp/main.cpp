@@ -144,7 +144,9 @@ int main(void) {
 		float precio = atof(recvBuff);
 
 		TipoHab tipoHab(id, tipo, precio);
+		cout << "tipohab: " << tipoHab.getId() << " " << tipoHab.getTipo() << " " << tipoHab.getPrecio() << endl;
 		tiposHabitacion[i] = tipoHab;
+		cout << "tipohabARRAY: " << tiposHabitacion[i].getId() << " " << tiposHabitacion[i].getTipo() << " " << tiposHabitacion[i].getPrecio() << endl;
 	}
 
 	// RECIBIR HOTELES
@@ -252,6 +254,10 @@ int main(void) {
 	}
 
 	//////////// PROGRAMA PRINCIPAL ////////////
+
+	for (int i = 0; i < numTipoHabs; ++i) {
+		cout << tiposHabitacion[i].getId() << " " << tiposHabitacion[i].getTipo() << endl;
+	}
 
 	cout << "\n ======================================\n "
 			   "\t RESERVA DE HOTELES\n "
