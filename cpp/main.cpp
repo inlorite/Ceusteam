@@ -151,24 +151,30 @@ int main(void) {
 
 	recv(s, recvBuff, sizeof(recvBuff), 0);
 	numHoteles = atoi(recvBuff);
+	printf("numHoteles: %d\n", numHoteles);
 
 	for (int i = 0; i < numHoteles; ++i) {
 		recv(s, recvBuff, sizeof(recvBuff), 0);
 		int id = atoi(recvBuff);
+		printf("id: %d\n", id);
 
 		recv(s, recvBuff, sizeof(recvBuff), 0);
 		char* nombre = new char[strlen(recvBuff)+1];
 		strcpy(nombre, recvBuff);
+		printf("nombre: %s\n", nombre);
 
 		recv(s, recvBuff, sizeof(recvBuff), 0);
 		char* localizacion = new char[strlen(recvBuff)+1];
 		strcpy(localizacion, recvBuff);
+		printf("localizacion: %s\n", localizacion);
 
 		recv(s, recvBuff, sizeof(recvBuff), 0);
 		int numHabTotales = atoi(recvBuff);
+		printf("numHabTotales: %d\n", numHabTotales);
 
 		recv(s, recvBuff, sizeof(recvBuff), 0);
 		int numHabActuales = atoi(recvBuff);
+		printf("numHabActuales: %d\n", numHabActuales);
 
 		Habitacion* habitaciones = new Habitacion[numHabTotales];
 
@@ -543,6 +549,12 @@ int main(void) {
 		if(opcion>3 || opcion<1)
 			cout << "Hay que introducir un numero del 1 al 3." << endl;
 	}
+
+	strcpy(sendBuff, "EXIT");
+	send(s, sendBuff, sizeof(sendBuff), 0);
+
+	closesocket(s);
+	WSACleanup();
 
 	return 0;
 }
