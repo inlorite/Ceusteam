@@ -348,6 +348,8 @@ int main(void) {
 				send(s, sendBuff, sizeof(sendBuff), 0);
 				strcpy(sendBuff, contrasena);
 				send(s, sendBuff, sizeof(sendBuff), 0);
+				sprintf(sendBuff, "%d", numClientes);
+				send(s, sendBuff, sizeof(sendBuff), 0);
 
 				break;
 			case 3:
@@ -408,7 +410,7 @@ int main(void) {
 							case 2:
 								// Reservar
 
-								if (hoteles[hotelSeleccionado-1].getNumHabActuales() < hoteles[hotelSeleccionado-1].getNumHabTotales())
+								if (hoteles[hotelSeleccionado-1].numHabOcupadas() < hoteles[hotelSeleccionado-1].getNumHabActuales())
 								{
 									cout << "\nIntroduzca el numero de ocupantes (max 5): ";
 									int ocupantes;
@@ -419,7 +421,7 @@ int main(void) {
 										// Realizar reserva
 										int numHabitacionReserva;
 
-										for (int i = 0; i < hoteles[hotelSeleccionado-1].getNumHabTotales(); ++i) {
+										for (int i = 0; i < hoteles[hotelSeleccionado-1].getNumHabActuales(); ++i) {
 											if (hoteles[hotelSeleccionado-1].getHabitaciones()[i].estaLibre())
 											{
 												numHabitacionReserva = hoteles[hotelSeleccionado-1].getHabitaciones()[i].getNumHabitacion();
@@ -446,7 +448,7 @@ int main(void) {
 										//cout<<"Num ocupantes: "<<hoteles[hotelSeleccionado-1].getHabitaciones()[0].getOcupantes();
 										//cout<<"Num ocupantes: "<<habitaciones[1].getOcupantes();
 
-										hoteles[hotelSeleccionado-1].setNumHabActuales(hoteles[hotelSeleccionado-1].getNumHabActuales()+1);
+										//hoteles[hotelSeleccionado-1].setNumHabActuales(hoteles[hotelSeleccionado-1].getNumHabActuales()+1);
 
 										cout << "\nHabitacion numero " << numHabitacionReserva << " reservada con exito.\n" << endl;
 
@@ -458,6 +460,8 @@ int main(void) {
 										sprintf(sendBuff, "%d", hotelSeleccionado);
 										send(s, sendBuff, sizeof(sendBuff), 0);
 										sprintf(sendBuff, "%d", numHabitacionReserva);
+										send(s, sendBuff, sizeof(sendBuff), 0);
+										sprintf(sendBuff, "%d", ocupantes);
 										send(s, sendBuff, sizeof(sendBuff), 0);
 
 									}
@@ -502,12 +506,15 @@ int main(void) {
 						reservas[i].imprimirReserva();
 					}
 				}
+
+				seguir3 = 1;
+
 				if(contadorReservas==0){
 					cout<<"\nNo se han encontrado reservas a su nombre\n"<<endl;
+					seguir3 = 0;
 				}
 
 
-				seguir3 = 1;
 				while (seguir3){
 					cout << "\n\nIntroduzca la operacion que quiera realizar: \n"
 						 "1. Eliminar reserva.\n"
@@ -519,33 +526,47 @@ int main(void) {
 					{
 						case 1:
 
-							cout<<"Selecciona el numero de reserva: ";
-							reservaSeleccionada = comprobarNumero();
-							if(reservaSeleccionada!=0 && reservaSeleccionada<=numReservas)
-							{
-								hoteles[reservas[reservaSeleccionada-1].getHotel()->getId()-1].getHabitaciones()[reservas[reservaSeleccionada-1].getNumHabitacion()-1].setOcupantes(0);
-								hoteles[reservas[reservaSeleccionada-1].getHotel()->getId()-1].setNumHabActuales(hoteles[reservas[reservaSeleccionada-1].getHotel()->getId()-1].getNumHabActuales()-1);
-								cout<<"Num ocupantes: "<<hoteles[reservas[reservaSeleccionada-1].getHotel()->getId()-1].getHabitaciones()[reservas[reservaSeleccionada-1].getNumHabitacion()-1].getOcupantes()<<endl;
-
-								// Mandamos la reserva al socket
-								strcpy(sendBuff, "ELIMINAR RESERVA");
-								send(s, sendBuff, sizeof(sendBuff), 0);
-								sprintf(sendBuff, "%d", clientes->encontrarCliente(clientes, numClientes, usuario)->getId());
-								send(s, sendBuff, sizeof(sendBuff), 0);
-								sprintf(sendBuff, "%d", reservas[reservaSeleccionada-1].getHotel()->getId());
-								send(s, sendBuff, sizeof(sendBuff), 0);
-								sprintf(sendBuff, "%d", reservas[reservaSeleccionada-1].getNumHabitacion());
-								send(s, sendBuff, sizeof(sendBuff), 0);
-
-								reservas[reservaSeleccionada-1].eliminarReserva();
-
-								for (int i = reservaSeleccionada-1; i < numReservas-1; i++) {
-									reservas[i]=reservas[i+1];
+							contadorReservas = 0;
+							for (int i = 0;i < numReservas; i++) {
+								if (strcmp(reservas[i].getCliente()->getNombre(), usuario) == 0) {
+									contadorReservas++;
+									cout<<i+1<<". ";
+									reservas[i].imprimirReserva();
 								}
-								numReservas--;
+							}
 
-							}else{
-								cout << "\nLa reserva no existe."<<endl;
+							if (contadorReservas != 0) {
+								cout<<"Selecciona el numero de reserva: ";
+								reservaSeleccionada = comprobarNumero();
+								if(reservaSeleccionada!=0 && reservaSeleccionada<=numReservas)
+								{
+									hoteles[reservas[reservaSeleccionada-1].getHotel()->getId()-1].getHabitaciones()[reservas[reservaSeleccionada-1].getNumHabitacion()-1].setOcupantes(0);
+									//hoteles[reservas[reservaSeleccionada-1].getHotel()->getId()-1].setNumHabActuales(hoteles[reservas[reservaSeleccionada-1].getHotel()->getId()-1].getNumHabActuales()-1);
+									cout<<"Num ocupantes: "<<hoteles[reservas[reservaSeleccionada-1].getHotel()->getId()-1].getHabitaciones()[reservas[reservaSeleccionada-1].getNumHabitacion()-1].getOcupantes()<<endl;
+
+									// Mandamos la reserva al socket
+									strcpy(sendBuff, "ELIMINAR RESERVA");
+									send(s, sendBuff, sizeof(sendBuff), 0);
+									sprintf(sendBuff, "%d", clientes->encontrarCliente(clientes, numClientes, usuario)->getId());
+									send(s, sendBuff, sizeof(sendBuff), 0);
+									sprintf(sendBuff, "%d", reservas[reservaSeleccionada-1].getHotel()->getId());
+									send(s, sendBuff, sizeof(sendBuff), 0);
+									sprintf(sendBuff, "%d", reservas[reservaSeleccionada-1].getNumHabitacion());
+									send(s, sendBuff, sizeof(sendBuff), 0);
+
+									//reservas[reservaSeleccionada-1].eliminarReserva();
+
+									for (int i = reservaSeleccionada-1; i < numReservas-1; i++) {
+										reservas[i]=reservas[i+1];
+									}
+									numReservas--;
+									seguir3 = 0;
+
+								}else{
+									cout << "\nLa reserva no existe." << endl;
+								}
+							} else {
+								cout << "\nNo existen reservas a su nombre." << endl;
 							}
 							break;
 

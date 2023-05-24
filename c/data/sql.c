@@ -231,7 +231,7 @@ void guardarDatos(sqlite3* db, sqlite3_stmt* stmt, Hotel* hoteles, int numHotele
 	char insertHabitacionesHoteles[] = "INSERT INTO HABITACIONES_HOTELES(ID, ID_HOTEL, NUM_HABITACION, OCUPANTES, ID_TIPO_HABITACION) VALUES (?, ?, ?, ?, ?);";
 
 	for (int i = 0; i < numHoteles; ++i) {
-		for (int j = 0; j < hoteles[i].numHabTotales; ++j) {
+		for (int j = 0; j < hoteles[i].numHabActuales; ++j) {
 			sqlite3_prepare_v2(db, insertHabitacionesHoteles, strlen(insertHabitacionesHoteles) + 1, &stmt, NULL) ;
 			sqlite3_bind_int(stmt, 1, j);
 			sqlite3_bind_int(stmt, 2, hoteles[i].id);

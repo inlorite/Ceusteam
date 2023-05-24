@@ -124,18 +124,18 @@ int main(int argc, char *argv[]) {
 		{
 
 			recv(comm_socket, recvBuff, sizeof(recvBuff), 0);
-			char* nombre;
+			char* nombre = malloc(sizeof(recvBuff)+1);
 			strcpy(nombre, recvBuff);
 
 			recv(comm_socket, recvBuff, sizeof(recvBuff), 0);
-			char* email;
+			char* email = malloc(sizeof(recvBuff)+1);
 			strcpy(email, recvBuff);
 
 			recv(comm_socket, recvBuff, sizeof(recvBuff), 0);
 			int numTelf = atoi(recvBuff);
 
 			recv(comm_socket, recvBuff, sizeof(recvBuff), 0);
-			char* contrasena;
+			char* contrasena = malloc(sizeof(recvBuff)+1);
 			strcpy(contrasena, recvBuff);
 
 			recv(comm_socket, recvBuff, sizeof(recvBuff), 0);
@@ -158,16 +158,18 @@ int main(int argc, char *argv[]) {
 			recv(comm_socket, recvBuff, sizeof(recvBuff), 0);
 			int numHabitacion = atoi(recvBuff);
 
+			recv(comm_socket, recvBuff, sizeof(recvBuff), 0);
+			int ocupantes = atoi(recvBuff);
+			printf("NUMERO OCUPANTES QUE ESTAMOS MIRANDO AHORA: %d", ocupantes);
+
 			// ANADIR LA RESERVA EN LA BD
 			insertarReserva(db, stmt, idCliente, idHotel, numHabitacion, f);
 
 			// ACTUALIZAR HABITACION
-			recv(comm_socket, recvBuff, sizeof(recvBuff), 0);
-			int ocupantes = atoi(recvBuff);
 			updateHabitacion(db, stmt, idHotel, numHabitacion, ocupantes, f);
 
 			// ACTUALIZAR HOTEL
-			updateHotel(db, stmt, idHotel, hoteles[idHotel-1].numHabActuales, 1, f); // Incrementamos el atributo numHabActuales
+			//updateHotel(db, stmt, idHotel, hoteles[idHotel-1].numHabActuales, 1, f); // Incrementamos el atributo numHabActuales
 		}
 
 
@@ -190,7 +192,7 @@ int main(int argc, char *argv[]) {
 			updateHabitacion(db, stmt, idHotel, numHabitacion, 0, f);
 
 			// ACTUALIZAR HOTEL
-			updateHotel(db, stmt, idHotel, hoteles[idHotel-1].numHabActuales, -1, f); // Decrementamos el atributo numHabActuales
+			//updateHotel(db, stmt, idHotel, hoteles[idHotel-1].numHabActuales, -1, f); // Decrementamos el atributo numHabActuales
 		}
 
 		// CARGAR DATOS

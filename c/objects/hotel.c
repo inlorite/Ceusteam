@@ -95,7 +95,6 @@ void modificarHabitacion(Hotel* h, TipoHab* tiposHabitacion){
 	}
 	scanf("%d",&numHab);
 	printf("1. Modificar tipo de habitacion\n");
-	printf("2. Modificar numero de ocupantes\n");
 	printf("Seleccione una opcion: ");
 	scanf("%d", &opcion);
 
@@ -115,11 +114,6 @@ void modificarHabitacion(Hotel* h, TipoHab* tiposHabitacion){
 		   		}
 		   	}
 	      printf("Tipo de habitacion modificado con exito.\n");
-	      break;
-		case 2:
-	      // Modificar el número de ocupantes
-	      printf("Introduzca el nuevo numero de ocupantes\n");
-	      scanf("%d", &h->habitaciones[numHab-1].ocupantes);
 	      break;
 	 }
 }

@@ -24,7 +24,7 @@ Hotel::Hotel(int id, char* nombre, char* localizacion, int numHabTotales, int nu
 	this->numHabActuales = numHabActuales;
 
 	this->habitaciones = new Habitacion[numHabTotales];
-	for (int i = 0; i < numHabTotales; ++i) {
+	for (int i = 0; i < numHabActuales; ++i) {
 		this->habitaciones[i] = habitaciones[i];
 	}
 }
@@ -45,7 +45,7 @@ Hotel::Hotel(const Hotel &other) {
 	this->numHabActuales = numHabActuales;
 
 	this->habitaciones = new Habitacion[other.numHabTotales];
-	for (int i = 0; i < other.numHabTotales; ++i) {
+	for (int i = 0; i < other.numHabActuales; ++i) {
 		this->habitaciones[i] = other.habitaciones[i];
 	}
 }
@@ -91,14 +91,27 @@ void Hotel::setNumHabActuales(int numHabActuales)
 
 /////////////////// FUNCIONES ///////////////////////
 
+int Hotel::numHabOcupadas() {
+	int habOcupadas = 0;
+
+	for (int i = 0; i < this->numHabActuales; ++i) {
+		if (this->habitaciones[i].getOcupantes() > 0) {
+			habOcupadas++;
+		}
+	}
+
+	return habOcupadas;
+}
+
 void Hotel::imprimirHotel()
 {
-	cout << "[" << this->id << " - " << this->nombre << " - " << this->localizacion << " - Ocupacion: " << this->numHabActuales << "/"<< this->numHabTotales << "]" << endl;
+	int numHabOcupadas = this->numHabOcupadas();
+	cout << "[" << this->id << " - " << this->nombre << " - " << this->localizacion << " - Ocupacion: " << numHabOcupadas << "/"<< this->numHabActuales << "]" << endl;
 }
 
 void Hotel::visualizarHabitacionesHotel()
 {
-	for (int i = 0; i < this->numHabTotales; ++i) {
+	for (int i = 0; i < this->numHabActuales; ++i) {
 		this->habitaciones[i].imprimirHabitacion();
 	}
 }

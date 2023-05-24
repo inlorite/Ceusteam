@@ -25,6 +25,7 @@ class Hotel {
 		int getNumHabTotales();
 		int getNumHabActuales();
 		Habitacion* getHabitaciones();
+		int numHabOcupadas();
 
 		void setNumHabActuales(int numHabActuales);
 
