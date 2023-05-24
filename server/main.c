@@ -37,15 +37,6 @@ int main(int argc, char *argv[]) {
 	cargarClientes(db, stmt, clientes, &numClientes, f);
 	cargarReservas(db, stmt, reservas, &numReservas, clientes, hoteles, f);
 
-	printf("numidhotel: %d\n", idHotel);
-	printf("hotel: %d - %s\n", hoteles[0].id, hoteles[0].nombre);
-
-	printf("numclientes: %d\n", numClientes);
-	printf("cliente: %d - %s\n", clientes[0].id, clientes[0].nombre);
-
-	printf("numreservas: %d\n", numReservas);
-	printf("reserva0: %s - %s - %d\n", reservas[0].cliente->nombre, reservas[0].hotel->nombre, reservas[0].numHabitacion);
-
 	WSADATA wsaData;
 	SOCKET conn_socket;
 	SOCKET comm_socket;
@@ -160,7 +151,6 @@ int main(int argc, char *argv[]) {
 
 			recv(comm_socket, recvBuff, sizeof(recvBuff), 0);
 			int ocupantes = atoi(recvBuff);
-			printf("NUMERO OCUPANTES QUE ESTAMOS MIRANDO AHORA: %d", ocupantes);
 
 			// ANADIR LA RESERVA EN LA BD
 			insertarReserva(db, stmt, idCliente, idHotel, numHabitacion, f);
@@ -168,8 +158,6 @@ int main(int argc, char *argv[]) {
 			// ACTUALIZAR HABITACION
 			updateHabitacion(db, stmt, idHotel, numHabitacion, ocupantes, f);
 
-			// ACTUALIZAR HOTEL
-			//updateHotel(db, stmt, idHotel, hoteles[idHotel-1].numHabActuales, 1, f); // Incrementamos el atributo numHabActuales
 		}
 
 
@@ -191,8 +179,6 @@ int main(int argc, char *argv[]) {
 			// ACTUALIZAR HABITACION
 			updateHabitacion(db, stmt, idHotel, numHabitacion, 0, f);
 
-			// ACTUALIZAR HOTEL
-			//updateHotel(db, stmt, idHotel, hoteles[idHotel-1].numHabActuales, -1, f); // Decrementamos el atributo numHabActuales
 		}
 
 		// CARGAR DATOS
@@ -214,24 +200,18 @@ int main(int argc, char *argv[]) {
 				send(comm_socket, sendBuff, sizeof(sendBuff), 0);
 			}
 
-			printf("entrando en cargar datos\n");
-
 			// Enviar hoteles
 			sprintf(sendBuff, "%d", idHotel);
-			printf("idhotel: %d\n", idHotel);
 			send(comm_socket, sendBuff, sizeof(sendBuff), 0);
 
 			for (int i = 0; i < idHotel; ++i) {
 				sprintf(sendBuff, "%d", hoteles[i].id);
-				printf("id: %d\n", hoteles[i].id);
 				send(comm_socket, sendBuff, sizeof(sendBuff), 0);
 
 				strcpy(sendBuff, hoteles[i].nombre);
-				printf("nombre: %s\n", hoteles[i].nombre);
 				send(comm_socket, sendBuff, sizeof(sendBuff), 0);
 
 				strcpy(sendBuff, hoteles[i].localizacion);
-				printf("localizacion: %s\n", hoteles[i].localizacion);
 				send(comm_socket, sendBuff, sizeof(sendBuff), 0);
 
 				sprintf(sendBuff, "%d", hoteles[i].numHabTotales);
@@ -288,7 +268,6 @@ int main(int argc, char *argv[]) {
 				send(comm_socket, sendBuff, sizeof(sendBuff), 0);
 			}
 
-			printf("carga datos acabada\n");
 		}
 
 

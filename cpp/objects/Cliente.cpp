@@ -99,7 +99,6 @@ Cliente* Cliente::encontrarCliente(Cliente* clientes, int numClientes, char* nom
 {
 	for (int i = 0; i < numClientes; i++) {
 		if(strcmp(clientes[i].getNombre() ,nombre)==0){
-			cout << "encontrarCliente: nombre del cliente: " << clientes[i].getNombre() << " nombre variable: " << nombre << endl;
 			return &clientes[i];
 		}
 	}

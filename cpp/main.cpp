@@ -46,7 +46,6 @@ int comprobarNumero()
 }
 
 int main(void) {
-	cout << "Programa hecho en cpp" << endl;
 
 	FILE* f;
 
@@ -107,22 +106,6 @@ int main(void) {
 	TipoHab *tiposHabitacion = new TipoHab[3];
 	Reserva* reservas = new Reserva[50];
 
-	/*
-	TipoHab tipo1(1,"Presencial",200);
-	tiposHabitacion[0]=tipo1;
-	Cliente c(1, "test", "test@gmail.com", 111111111, "test");
-	Habitacion *habitaciones = new Habitacion[2];
-	Habitacion habitacion1(1,&tipo1,0);
-	Habitacion habitacion2(2,&tipo1,0);
-	habitaciones[0]=habitacion1;
-	habitaciones[1]=habitacion2;
-	Hotel hotel(1,"hotel1","malaga",2,0,habitaciones);
-	hoteles[0]=hotel;
-	numHoteles++;
-	clientes[0] = c;
-	numClientes++;
-	*/
-
 	strcpy(sendBuff, "CARGAR DATOS");
 	send(s, sendBuff, sizeof(sendBuff), 0);
 
@@ -144,39 +127,32 @@ int main(void) {
 		float precio = atof(recvBuff);
 
 		TipoHab tipoHab(id, tipo, precio);
-		cout << "tipohab: " << tipoHab.getId() << " " << tipoHab.getTipo() << " " << tipoHab.getPrecio() << endl;
 		tiposHabitacion[i] = TipoHab(tipoHab);
-		cout << "tipohabARRAY: " << tiposHabitacion[i].getId() << " " << tiposHabitacion[i].getTipo() << " " << tiposHabitacion[i].getPrecio() << endl;
+
 	}
 
 	// RECIBIR HOTELES
 
 	recv(s, recvBuff, sizeof(recvBuff), 0);
 	numHoteles = atoi(recvBuff);
-	printf("numHoteles: %d\n", numHoteles);
 
 	for (int i = 0; i < numHoteles; ++i) {
 		recv(s, recvBuff, sizeof(recvBuff), 0);
 		int id = atoi(recvBuff);
-		printf("id: %d\n", id);
 
 		recv(s, recvBuff, sizeof(recvBuff), 0);
 		char* nombre = new char[strlen(recvBuff)+1];
 		strcpy(nombre, recvBuff);
-		printf("nombre: %s\n", nombre);
 
 		recv(s, recvBuff, sizeof(recvBuff), 0);
 		char* localizacion = new char[strlen(recvBuff)+1];
 		strcpy(localizacion, recvBuff);
-		printf("localizacion: %s\n", localizacion);
 
 		recv(s, recvBuff, sizeof(recvBuff), 0);
 		int numHabTotales = atoi(recvBuff);
-		printf("numHabTotales: %d\n", numHabTotales);
 
 		recv(s, recvBuff, sizeof(recvBuff), 0);
 		int numHabActuales = atoi(recvBuff);
-		printf("numHabActuales: %d\n", numHabActuales);
 
 		Habitacion* habitaciones = new Habitacion[numHabTotales];
 
@@ -254,12 +230,6 @@ int main(void) {
 	}
 
 	//////////// PROGRAMA PRINCIPAL ////////////
-
-	for (int i = 0; i < numTipoHabs; ++i) {
-		cout << tiposHabitacion[i].getId() << " " << tiposHabitacion[i].getTipo() << endl;
-	}
-
-	cout << "habitacion 2 hotel 2: numHab: " << hoteles[1].getHabitaciones()[1].getNumHabitacion() << " tipohab: " << hoteles[1].getHabitaciones()[1].getTipoHab()->getTipo() << endl;
 
 	cout << "\n ======================================\n "
 			   "\t RESERVA DE HOTELES\n "
@@ -431,24 +401,11 @@ int main(void) {
 
 										Reserva nuevaReserva(clientes->encontrarCliente(clientes, numClientes, usuario), &hoteles[hotelSeleccionado-1], numHabitacionReserva);
 
-										cout << "despues de crear reserva" << endl;
-
 										reservas[numReservas] = nuevaReserva;
-
-										cout << "despues de asignar puntero" << endl;
 
 										numReservas++;
 
-										cout << "MEMATO" << endl;
-
 										hoteles[hotelSeleccionado-1].getHabitaciones()[numHabitacionReserva-1].setOcupantes(ocupantes);
-
-										cout << "despues de set ocupantes" << endl;
-
-										//cout<<"Num ocupantes: "<<hoteles[hotelSeleccionado-1].getHabitaciones()[0].getOcupantes();
-										//cout<<"Num ocupantes: "<<habitaciones[1].getOcupantes();
-
-										//hoteles[hotelSeleccionado-1].setNumHabActuales(hoteles[hotelSeleccionado-1].getNumHabActuales()+1);
 
 										cout << "\nHabitacion numero " << numHabitacionReserva << " reservada con exito.\n" << endl;
 
@@ -495,9 +452,6 @@ int main(void) {
 			case 2:
 				// Ver tus reservas
 
-				//Reserva* pruebaReserva = new Reserva(&c,&hoteles[0],1);
-				//reservas[numReservas]= *pruebaReserva;
-
 				contadorReservas = 0;
 				for (int i = 0;i < numReservas; i++) {
 					if (strcmp(reservas[i].getCliente()->getNombre(), usuario) == 0) {
@@ -541,9 +495,8 @@ int main(void) {
 								if(reservaSeleccionada!=0 && reservaSeleccionada<=numReservas)
 								{
 									hoteles[reservas[reservaSeleccionada-1].getHotel()->getId()-1].getHabitaciones()[reservas[reservaSeleccionada-1].getNumHabitacion()-1].setOcupantes(0);
-									//hoteles[reservas[reservaSeleccionada-1].getHotel()->getId()-1].setNumHabActuales(hoteles[reservas[reservaSeleccionada-1].getHotel()->getId()-1].getNumHabActuales()-1);
-									cout<<"Num ocupantes: "<<hoteles[reservas[reservaSeleccionada-1].getHotel()->getId()-1].getHabitaciones()[reservas[reservaSeleccionada-1].getNumHabitacion()-1].getOcupantes()<<endl;
 
+									cout<< "Reserva eliminada con exito"<<endl;
 									// Mandamos la reserva al socket
 									strcpy(sendBuff, "ELIMINAR RESERVA");
 									send(s, sendBuff, sizeof(sendBuff), 0);
@@ -554,7 +507,6 @@ int main(void) {
 									sprintf(sendBuff, "%d", reservas[reservaSeleccionada-1].getNumHabitacion());
 									send(s, sendBuff, sizeof(sendBuff), 0);
 
-									//reservas[reservaSeleccionada-1].eliminarReserva();
 
 									for (int i = reservaSeleccionada-1; i < numReservas-1; i++) {
 										reservas[i]=reservas[i+1];

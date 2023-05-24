@@ -275,7 +275,7 @@ void consultarReserva(Reserva* arrayReservas, int* numReservas, Cliente* c, int*
 	for (int i = 0; i < *numReservas; ++i) {
 		if (arrayReservas[i].cliente->id == idCliente)
 		{
-			printf("Hotel: %d, %s - Habitacion %d", arrayReservas[i].hotel->id, arrayReservas[i].hotel->nombre, arrayReservas[i].numHabitacion);
+			printf("Hotel: %d, %s - Habitacion %d\n", arrayReservas[i].hotel->id, arrayReservas[i].hotel->nombre, arrayReservas[i].numHabitacion);
 		}
 	}
 }

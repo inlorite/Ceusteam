@@ -5,7 +5,6 @@
 
 void crearTablas(sqlite3* db, sqlite3_stmt* stmt, FILE* f)
 {
-	printf("FUNCION SQL CREAR TABLAS");
 
 	int result;
 
@@ -76,7 +75,6 @@ void crearTablas(sqlite3* db, sqlite3_stmt* stmt, FILE* f)
 }
 
 void crearTablasAdmin(sqlite3* db, sqlite3_stmt* stmt, FILE* f) {
-	printf("FUNCION SQL CREAR TABLAS ADMIN");
 
 	int result;
 
@@ -231,7 +229,7 @@ void guardarDatos(sqlite3* db, sqlite3_stmt* stmt, Hotel* hoteles, int numHotele
 	char insertHabitacionesHoteles[] = "INSERT INTO HABITACIONES_HOTELES(ID, ID_HOTEL, NUM_HABITACION, OCUPANTES, ID_TIPO_HABITACION) VALUES (?, ?, ?, ?, ?);";
 
 	for (int i = 0; i < numHoteles; ++i) {
-		for (int j = 0; j < hoteles[i].numHabTotales; ++j) {
+		for (int j = 0; j < hoteles[i].numHabActuales; ++j) {
 			sqlite3_prepare_v2(db, insertHabitacionesHoteles, strlen(insertHabitacionesHoteles) + 1, &stmt, NULL) ;
 			sqlite3_bind_int(stmt, 1, j);
 			sqlite3_bind_int(stmt, 2, hoteles[i].id);
@@ -585,10 +583,8 @@ void cargarAdmins(sqlite3* db, sqlite3_stmt* stmt, Admin* admins, int* numAdmins
 		int id = atoi((char*) sqlite3_column_text(stmt, 0));
 		char* nombre = malloc(sizeof(char) * strlen((char*) sqlite3_column_text(stmt, 1))+1);
 		strcpy(nombre, (char*) sqlite3_column_text(stmt, 1));
-		printf("%s\n", nombre);
 		char* contrasena = malloc(sizeof(char) * strlen((char*) sqlite3_column_text(stmt, 2))+1);
 		strcpy(contrasena, (char*) sqlite3_column_text(stmt, 2));
-		printf("%s\n", contrasena);
 
 		Admin a = {id, nombre, contrasena};
 		admins[index] = a;
@@ -596,20 +592,6 @@ void cargarAdmins(sqlite3* db, sqlite3_stmt* stmt, Admin* admins, int* numAdmins
 
 		index++;
 	}
-
-	// Itera sobre las filas de resultados
-	/*
-	while ((result = sqlite3_step(stmt)) == SQLITE_ROW) {
-		int columnCount = sqlite3_column_count(stmt);
-
-		for (int i = 0; i < columnCount; i++) {
-			const char* columnName = sqlite3_column_name(stmt, i);
-			const char* columnValue = (const char*)sqlite3_column_text(stmt, i);
-			printf("%s = %s\n", columnName, columnValue ? columnValue : "NULL");
-		}
-		printf("\n");
-	}
-	*/
 
 	if (result != SQLITE_DONE) {
 		fprintf(stderr, "Error al obtener resultados: %s\n", sqlite3_errmsg(db));
